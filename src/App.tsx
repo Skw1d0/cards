@@ -1,24 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { ThemeProvider } from "@emotion/react";
+import { Box, CssBaseline, useMediaQuery } from "@mui/material";
+import { NavigartionBar } from "./components/NavigationBar";
+import { light, dark } from "./themes/themes";
+import { createContext, useEffect, useState } from "react";
+import { Dashboard } from "./components/Dashboard";
+import { SelectCategories } from "./components/SelectCategories";
+
+type ThemeTypes = "auto" | "light" | "dark";
+
+interface AppContextProps {
+  isDarkMode: boolean;
+  selectedCategoryID: string | undefined;
+  setIsDarkMode: (value: boolean) => void;
+  setSelectedCategoryID: (id: string | undefined) => void;
+}
+
+export const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 function App() {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [theme] = useState<ThemeTypes>("auto");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedCategoryID, setSelectedCategoryID] = useState<
+    string | undefined
+  >(undefined);
+
+  useEffect(() => {
+    setIsDarkMode(
+      theme === "auto" ? prefersDarkMode : theme === "dark" ? true : false
+    );
+  }, [theme, prefersDarkMode]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <ThemeProvider theme={isDarkMode ? dark : light}>
+        <CssBaseline />
+        <AppContext.Provider
+          value={{
+            selectedCategoryID,
+            setSelectedCategoryID,
+            isDarkMode,
+            setIsDarkMode,
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          <NavigartionBar />
+          <Box sx={{ marginTop: 10 }}>
+            {selectedCategoryID === undefined && <SelectCategories />}
+            {selectedCategoryID !== undefined && <Dashboard />}
+          </Box>
+        </AppContext.Provider>
+      </ThemeProvider>
     </div>
   );
 }
