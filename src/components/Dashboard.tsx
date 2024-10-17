@@ -4,7 +4,7 @@ import { DashboardManageSubcategories } from "./DashboardManageSubcategories";
 import { createContext, useState } from "react";
 import { DashboardManageCards } from "./DashboardManageCards";
 import { DashboardAddCards } from "./DashboardAddCards";
-import { Query } from "./Query";
+import { Test } from "./Test";
 
 type DashboradTypes =
   | undefined
@@ -30,7 +30,7 @@ export const Dashboard = () => {
     <DashboardContext.Provider value={{ dashboardType, setDeschboardType }}>
       <Box sx={{ margin: 2 }}>
         <DashboradNavigation />
-        {dashboardType === "query" && <Query />}
+        {dashboardType === "query" && <Test />}
         {dashboardType === "add-cards" && <DashboardAddCards />}
         {dashboardType === "edit-cards" && <DashboardManageCards />}
         {dashboardType === "edit-subcategories" && (

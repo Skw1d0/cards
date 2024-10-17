@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface CardStatistic {
   time: number;
-  isRight: boolean;
+  correct: boolean;
 }
 
 export interface Card {
@@ -39,15 +39,27 @@ export interface CategoriesActions {
   deleteSubcategory: (id: string) => void;
   getCategoryByID: (id: string) => Category | undefined;
   addCard: (subcategoryID: string, card: Card) => void;
-  getCards: (categoryID: string, subcategoryID?: string | undefined) => Card[];
+  getCards: (
+    categoryID: string,
+    subcategoryID?: string,
+    shuffle?: boolean
+  ) => Card[];
   deleteCard: (id: string) => void;
   changeCard: (id: string, question: string, answer: string) => void;
-  getQueryList: () => Card[];
+  addCardStatistic: (id: string, time: number, isCorrect: boolean) => void;
+
   reset: () => void;
 }
 
 const initialState: CategoriesState = {
   categories: [],
+};
+
+const shuffle = (cards: Card[]): Card[] => {
+  return cards
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
 };
 
 export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
@@ -246,7 +258,8 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
 
       getCards: (
         categoryID: string,
-        subcategoryID?: string | undefined
+        subcategoryID?: string,
+        isShuffle?: boolean
       ): Card[] => {
         const { categories } = get();
 
@@ -262,15 +275,56 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
           if (subcategory === undefined) {
             return [];
           }
-          return subcategory.cards;
+          return isShuffle ? shuffle(subcategory.cards) : subcategory.cards;
         }
 
-        // WITHOUT SUBCATEGORY
-        return category.subcategories.map((e) => e.cards).flat();
+        const cards = category.subcategories.map((e) => e.cards).flat();
+        return isShuffle ? shuffle(cards) : cards;
       },
 
-      getQueryList: (): Card[] => {
-        return [];
+      addCardStatistic: (id: string, time: number, isCorrect: boolean) => {
+        const { categories } = get();
+        const newCatogories = categories.map((category) => {
+          const newSubcategories = category.subcategories.map((subcategory) => {
+            const newCards = subcategory.cards.map((card) => {
+              if (card.id === id) {
+                return {
+                  id: card.id,
+                  question: card.question,
+                  answer: card.answer,
+                  statistics: [
+                    ...card.statistics,
+                    {
+                      time: time,
+                      correct: isCorrect,
+                    },
+                  ],
+                };
+              }
+
+              return {
+                id: card.id,
+                question: card.question,
+                answer: card.answer,
+                statistics: card.statistics,
+              };
+            });
+
+            return {
+              id: subcategory.id,
+              name: subcategory.name,
+              cards: newCards,
+            };
+          });
+
+          return {
+            id: category.id,
+            name: category.name,
+            subcategories: newSubcategories,
+          };
+        });
+
+        set({ categories: newCatogories });
       },
 
       reset: () => {

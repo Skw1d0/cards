@@ -9,6 +9,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Divider,
   FormControl,
   InputLabel,
   List,
@@ -16,6 +17,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -27,14 +29,12 @@ import { AppContext } from "../App";
 import { ChangeEvent, useContext, useState } from "react";
 import { DashboardNoSubcategory } from "./DashboardNoSubcategory";
 import { ExpandMore } from "@mui/icons-material";
-import { DashboardContext } from "./Dashboard";
 import { v4 } from "uuid";
 
 export const DashboardManageCards = () => {
   const { getCategoryByID, deleteCard, changeCard, addCard } =
     useCategoriesStore();
   const appContext = useContext(AppContext);
-  const dashboarContext = useContext(DashboardContext);
 
   const [subcategoryID, setSubcategoryID] = useState("");
   const [editCardID, setEditCardID] = useState("");
@@ -119,32 +119,6 @@ export const DashboardManageCards = () => {
                 />
                 <CardContent>
                   <List>
-                    {/* <ListItem>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Unterkategorie
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={subcategoryID}
-                          label="Unterkategorie"
-                          onChange={handleChange}
-                        >
-                          {appContext?.selectedCategoryID &&
-                            getCategoryByID(
-                              appContext.selectedCategoryID
-                            )?.subcategories.map((subcategory) => (
-                              <MenuItem
-                                key={subcategory.id}
-                                value={subcategory.id}
-                              >
-                                {subcategory.name}
-                              </MenuItem>
-                            ))}
-                        </Select>
-                      </FormControl>
-                    </ListItem> */}
                     <ListItem>
                       <FormControl fullWidth>
                         <TextField
@@ -235,7 +209,44 @@ export const DashboardManageCards = () => {
                               />
                             </FormControl>
                           ) : (
-                            <Typography>{card.answer}</Typography>
+                            <>
+                              <Typography>{card.answer}</Typography>
+                              <Divider variant="fullWidth" sx={{ my: 2 }} />
+                              <Stack direction={"column"}>
+                                <Stack direction={"row"}>
+                                  <Typography sx={{ flexGrow: 1 }}>
+                                    Gefragt:
+                                  </Typography>
+                                  <Typography>
+                                    {card.statistics.length}
+                                  </Typography>
+                                </Stack>
+                                <Stack direction={"row"}>
+                                  <Typography sx={{ flexGrow: 1 }}>
+                                    Richtig:
+                                  </Typography>
+                                  <Typography>
+                                    {
+                                      card.statistics.filter(
+                                        (stat) => stat.correct
+                                      ).length
+                                    }
+                                  </Typography>
+                                </Stack>
+                                <Stack direction={"row"}>
+                                  <Typography sx={{ flexGrow: 1 }}>
+                                    Falsch:
+                                  </Typography>
+                                  <Typography>
+                                    {
+                                      card.statistics.filter(
+                                        (stat) => !stat.correct
+                                      ).length
+                                    }
+                                  </Typography>
+                                </Stack>
+                              </Stack>
+                            </>
                           )}
                         </AccordionDetails>
                         <AccordionActions>
@@ -282,15 +293,6 @@ export const DashboardManageCards = () => {
                     ))
                   ) : (
                     <Typography>Noch keine Karten angelegt.</Typography>
-                    // <Button
-                    //   variant="contained"
-                    //   color="primary"
-                    //   onClick={() =>
-                    //     dashboarContext?.setDeschboardType("add-cards")
-                    //   }
-                    // >
-                    //   Karteikarten anlegen
-                    // </Button>
                   )}
                 </CardContent>
               </Card>

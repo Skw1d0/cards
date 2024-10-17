@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -15,24 +16,26 @@ import {
 } from "../stores/storeCategories";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
+import { Shuffle, ShuffleOn } from "@mui/icons-material";
 
-export const Query = () => {
-  const { getCategoryByID, getCards } = useCategoriesStore();
+export const Test = () => {
+  const { getCategoryByID, getCards, addCardStatistic } = useCategoriesStore();
   const [isTesting, setIsTesting] = useState(false);
 
   const [progress, setPorgress] = useState(0);
   const [currentCard, setCurrentCard] = useState(0);
   const [cards, setCards] = useState<CardStore[]>([]);
   const [isCardCoverd, setIsCardCoverd] = useState(true);
+  const [shuffle, setShuffle] = useState(false);
 
   const appContext = useContext(AppContext);
 
   const handleStartTest = (subcategory?: string) => {
     if (!appContext?.selectedCategoryID) return;
-
     const newCards: CardStore[] = getCards(
       appContext?.selectedCategoryID,
-      subcategory
+      subcategory,
+      shuffle
     );
 
     if (!newCards.length) return;
@@ -47,7 +50,9 @@ export const Query = () => {
     setIsCardCoverd(true);
   }, [cards, currentCard, progress]);
 
-  const handleNextCard = (answerCorrect: boolean) => {
+  const handleNextCard = (correct: boolean) => {
+    addCardStatistic(cards[currentCard].id, Date.now(), correct);
+
     if (currentCard === cards.length - 1) {
       setIsTesting(false);
       return;
@@ -69,6 +74,14 @@ export const Query = () => {
           />
           <CardContent>
             <Stack direction={"column"} spacing={1}>
+              <Box>
+                <Button
+                  onClick={() => setShuffle(!shuffle)}
+                  startIcon={shuffle ? <ShuffleOn /> : <Shuffle />}
+                >
+                  Zufällige abfrage der Karten.
+                </Button>
+              </Box>
               <Button
                 sx={{ height: 80 }}
                 variant="contained"
@@ -83,6 +96,7 @@ export const Query = () => {
                   (category) =>
                     category.cards.length > 0 && (
                       <Button
+                        fullWidth
                         key={category.id}
                         sx={{ height: 80 }}
                         variant="contained"
