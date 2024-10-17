@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   FormControl,
@@ -12,15 +13,21 @@ import {
   ListItemText,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useCategoriesStore } from "../stores/storeCategories";
 import { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "../App";
-import { Cancel, Delete, Edit, Save } from "@mui/icons-material";
+import { Cancel, Delete, Edit, Save, Warning } from "@mui/icons-material";
 
 export const SelectCategories = () => {
-  const { categories, createCategory, deleteCategorey, changeCategoryName } =
-    useCategoriesStore();
+  const {
+    categories,
+    createCategory,
+    deleteCategorey,
+    changeCategoryName,
+    reset,
+  } = useCategoriesStore();
   const appContext = useContext(AppContext);
 
   const [categoryInputValue, setCategoryInputValue] = useState("");
@@ -59,7 +66,6 @@ export const SelectCategories = () => {
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <TextField
                     fullWidth
-                    // size="small"
                     id="add-category"
                     label="Neue Kategorie"
                     variant="outlined"
@@ -138,6 +144,12 @@ export const SelectCategories = () => {
             ))}
           </List>
         </CardContent>
+        <CardActions>
+          <Typography sx={{ flexGrow: 1 }} />
+          <Button color="error" onClick={() => reset()} startIcon={<Warning />}>
+            Alle Daten löschen
+          </Button>
+        </CardActions>
       </Card>
     </Box>
   );

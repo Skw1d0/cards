@@ -159,6 +159,7 @@ export const DashboardManageCards = () => {
                       onClick={() => {
                         addCard(subcategoryID, {
                           id: v4(),
+                          time: Date.now(),
                           question: cardQuestion,
                           answer: cardAnswer,
                           statistics: [],
@@ -214,18 +215,35 @@ export const DashboardManageCards = () => {
                               <Divider variant="fullWidth" sx={{ my: 2 }} />
                               <Stack direction={"column"}>
                                 <Stack direction={"row"}>
-                                  <Typography sx={{ flexGrow: 1 }}>
-                                    Gefragt:
+                                  <Typography
+                                    sx={{ flexGrow: 1 }}
+                                    fontWeight={"light"}
+                                  >
+                                    Karte erstellt:
                                   </Typography>
-                                  <Typography>
+                                  <Typography fontWeight={"light"}>
+                                    {new Date(card.time).toLocaleString()} Uhr
+                                  </Typography>
+                                </Stack>
+                                <Stack direction={"row"}>
+                                  <Typography
+                                    sx={{ flexGrow: 1 }}
+                                    fontWeight={"light"}
+                                  >
+                                    Abgefragt:
+                                  </Typography>
+                                  <Typography fontWeight={"light"}>
                                     {card.statistics.length}
                                   </Typography>
                                 </Stack>
                                 <Stack direction={"row"}>
-                                  <Typography sx={{ flexGrow: 1 }}>
+                                  <Typography
+                                    sx={{ flexGrow: 1 }}
+                                    fontWeight={"light"}
+                                  >
                                     Richtig:
                                   </Typography>
-                                  <Typography>
+                                  <Typography fontWeight={"light"}>
                                     {
                                       card.statistics.filter(
                                         (stat) => stat.correct
@@ -234,10 +252,13 @@ export const DashboardManageCards = () => {
                                   </Typography>
                                 </Stack>
                                 <Stack direction={"row"}>
-                                  <Typography sx={{ flexGrow: 1 }}>
+                                  <Typography
+                                    sx={{ flexGrow: 1 }}
+                                    fontWeight={"light"}
+                                  >
                                     Falsch:
                                   </Typography>
-                                  <Typography>
+                                  <Typography fontWeight={"light"}>
                                     {
                                       card.statistics.filter(
                                         (stat) => !stat.correct

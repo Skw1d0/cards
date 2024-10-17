@@ -127,11 +127,6 @@ export const DashboardManageSubcategories = () => {
           </ListItem>
         </List>
       </CardContent>
-      <CardActions>
-        <Button onClick={() => dashboardContext?.setDeschboardType(undefined)}>
-          Schließen
-        </Button>
-      </CardActions>
     </Card>
   );
 };

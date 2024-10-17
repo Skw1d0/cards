@@ -9,6 +9,7 @@ export interface CardStatistic {
 
 export interface Card {
   id: string;
+  time: number;
   question: string;
   answer: string;
   statistics: CardStatistic[];
@@ -230,9 +231,10 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
               if (card.id === id) {
                 return {
                   id: card.id,
+                  time: Date.now(),
                   question: question,
                   answer: answer,
-                  statistics: card.statistics,
+                  statistics: [],
                 };
               } else {
                 return card;
@@ -290,6 +292,7 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
               if (card.id === id) {
                 return {
                   id: card.id,
+                  time: card.time,
                   question: card.question,
                   answer: card.answer,
                   statistics: [
@@ -304,6 +307,7 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
 
               return {
                 id: card.id,
+                time: card.time,
                 question: card.question,
                 answer: card.answer,
                 statistics: card.statistics,

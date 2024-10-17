@@ -121,6 +121,7 @@ export const DashboardAddCards = () => {
                   onClick={() => {
                     addCard(subcategoryID, {
                       id: v4(),
+                      time: Date.now(),
                       question: cardQuestion,
                       answer: cardAnswer,
                       statistics: [],
