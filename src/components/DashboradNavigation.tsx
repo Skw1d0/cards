@@ -20,7 +20,6 @@ import {
   Description,
   Folder,
   KeyboardArrowDown,
-  NoteAdd,
   PsychologyAlt,
 } from "@mui/icons-material";
 
@@ -88,31 +87,7 @@ export const DashboradNavigation = () => {
             <ListItemText>Wissen testen</ListItemText>
           </ListItemButton>
 
-          {/* <ListItemButton
-            onClick={() => {
-              dashboardContext?.setDeschboardType("add-cards");
-              handleClose();
-            }}
-          >
-            <ListItemIcon>
-              <NoteAdd />
-            </ListItemIcon>
-            <ListItemText>Karteikarten hinzufügen</ListItemText>
-          </ListItemButton> */}
-
           <ListItemButton
-            onClick={() => {
-              dashboardContext?.setDeschboardType("edit-cards");
-              handleClose();
-            }}
-          >
-            <ListItemIcon>
-              <Description />
-            </ListItemIcon>
-            <ListItemText>Karteikarten verwalten</ListItemText>
-          </ListItemButton>
-          <ListItemButton
-            divider
             onClick={() => {
               dashboardContext?.setDeschboardType("edit-subcategories");
               handleClose();
@@ -122,6 +97,19 @@ export const DashboradNavigation = () => {
               <Folder />
             </ListItemIcon>
             <ListItemText>Unterkategorien verwalten</ListItemText>
+          </ListItemButton>
+
+          <ListItemButton
+            divider
+            onClick={() => {
+              dashboardContext?.setDeschboardType("edit-cards");
+              handleClose();
+            }}
+          >
+            <ListItemIcon>
+              <Description />
+            </ListItemIcon>
+            <ListItemText>Karteikarten verwalten</ListItemText>
           </ListItemButton>
 
           <ListItemButton

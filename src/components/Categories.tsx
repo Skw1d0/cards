@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   Stack,
   TextField,
@@ -18,9 +19,16 @@ import {
 import { useCategoriesStore } from "../stores/storeCategories";
 import { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "../App";
-import { Cancel, Delete, Edit, Save, Warning } from "@mui/icons-material";
+import {
+  Cancel,
+  Category,
+  Delete,
+  Edit,
+  Save,
+  Warning,
+} from "@mui/icons-material";
 
-export const SelectCategories = () => {
+export const Categories = () => {
   const {
     categories,
     createCategory,
@@ -52,20 +60,19 @@ export const SelectCategories = () => {
   };
 
   return (
-    <Box sx={{ margin: 2 }}>
-      <Card sx={{ width: { xs: "100%", sm: 500 } }}>
-        <CardHeader
-          sx={{ color: "primary.main" }}
-          title="Kategorien"
-          subheader="Kategorie auswählen oder anlegen."
-        />
-        <CardContent>
+    <>
+      <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <Box sx={{ width: { xs: "100%", sm: 500 } }}>
+          <Typography color="primary" variant="overline" component={"h6"}>
+            Neue Kategorie anlegen
+          </Typography>
           <List>
             <ListItem>
               <ListItemText>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <TextField
                     fullWidth
+                    size="small"
                     id="add-category"
                     label="Neue Kategorie"
                     variant="outlined"
@@ -87,9 +94,16 @@ export const SelectCategories = () => {
                 </Box>
               </ListItemText>
             </ListItem>
+          </List>
+        </Box>
 
+        <Box sx={{ width: { xs: "100%", sm: 500 } }}>
+          <Typography color="primary" variant="overline" component={"h6"}>
+            Kategorie wählen
+          </Typography>
+          <List>
             {categories.map((category) => (
-              <ListItem key={category.id}>
+              <ListItem divider key={category.id}>
                 {editCategoryID === category.id ? (
                   <>
                     <ListItemText>
@@ -126,6 +140,9 @@ export const SelectCategories = () => {
                       appContext?.setSelectedCategoryID(category.id);
                     }}
                   >
+                    <ListItemIcon>
+                      <Category />
+                    </ListItemIcon>
                     <ListItemText>{category.name}</ListItemText>
                   </ListItemButton>
                 )}
@@ -143,14 +160,17 @@ export const SelectCategories = () => {
               </ListItem>
             ))}
           </List>
-        </CardContent>
-        <CardActions>
-          <Typography sx={{ flexGrow: 1 }} />
-          <Button color="error" onClick={() => reset()} startIcon={<Warning />}>
-            Alle Daten löschen
-          </Button>
-        </CardActions>
-      </Card>
-    </Box>
+          <Box sx={{ display: "flex", justifyContent: "right", my: 2 }}>
+            <Button
+              color="error"
+              onClick={() => reset()}
+              startIcon={<Warning />}
+            >
+              Alle Daten löschen
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    </>
   );
 };

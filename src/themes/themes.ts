@@ -8,7 +8,7 @@ export const dark = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#333333", // Setze hier die gewünschte Hintergrundfarbe
+          // backgroundColor: "#333333", // Setze hier die gewünschte Hintergrundfarbe
         },
       },
     },
@@ -23,7 +23,7 @@ export const light = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#cccccc", // Setze hier die gewünschte Hintergrundfarbe
+          // backgroundColor: "#cccccc", // Setze hier die gewünschte Hintergrundfarbe
         },
       },
     },

@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { DashboradNavigation } from "./DashboradNavigation";
-import { DashboardManageSubcategories } from "./DashboardManageSubcategories";
+import { ManageSubcategories } from "./ManageSubcategories";
 import { createContext, useState } from "react";
-import { DashboardManageCards } from "./DashboardManageCards";
+import { ManageCards } from "./ManageCards";
 import { DashboardAddCards } from "./DashboardAddCards";
 import { Test } from "./Test";
 
@@ -32,10 +32,8 @@ export const Dashboard = () => {
         <DashboradNavigation />
         {dashboardType === "query" && <Test />}
         {dashboardType === "add-cards" && <DashboardAddCards />}
-        {dashboardType === "edit-cards" && <DashboardManageCards />}
-        {dashboardType === "edit-subcategories" && (
-          <DashboardManageSubcategories />
-        )}
+        {dashboardType === "edit-cards" && <ManageCards />}
+        {dashboardType === "edit-subcategories" && <ManageSubcategories />}
       </Box>
     </DashboardContext.Provider>
   );

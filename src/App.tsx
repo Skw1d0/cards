@@ -5,7 +5,7 @@ import { NavigartionBar } from "./components/NavigationBar";
 import { light, dark } from "./themes/themes";
 import { createContext, useEffect, useState } from "react";
 import { Dashboard } from "./components/Dashboard";
-import { SelectCategories } from "./components/SelectCategories";
+import { Categories } from "./components/Categories";
 
 type ThemeTypes = "auto" | "light" | "dark";
 
@@ -46,7 +46,7 @@ function App() {
         >
           <NavigartionBar />
           <Box sx={{ marginTop: 10 }}>
-            {selectedCategoryID === undefined && <SelectCategories />}
+            {selectedCategoryID === undefined && <Categories />}
             {selectedCategoryID !== undefined && <Dashboard />}
           </Box>
         </AppContext.Provider>
