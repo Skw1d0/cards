@@ -5,7 +5,6 @@ import {
   CardActions,
   CardContent,
   Checkbox,
-  Divider,
   FormControlLabel,
   LinearProgress,
   List,

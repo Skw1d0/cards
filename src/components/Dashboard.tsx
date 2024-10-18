@@ -5,6 +5,7 @@ import { createContext, useState } from "react";
 import { ManageCards } from "./ManageCards";
 import { DashboardAddCards } from "./DashboardAddCards";
 import { Test } from "./Test";
+import { Charts } from "./Charts";
 
 type DashboradTypes =
   | undefined
@@ -34,6 +35,7 @@ export const Dashboard = () => {
         {dashboardType === "add-cards" && <DashboardAddCards />}
         {dashboardType === "edit-cards" && <ManageCards />}
         {dashboardType === "edit-subcategories" && <ManageSubcategories />}
+        {dashboardType === undefined && <Charts />}
       </Box>
     </DashboardContext.Provider>
   );
