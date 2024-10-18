@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   IconButton,
   List,
   ListItem,
@@ -28,105 +30,118 @@ export const ManageSubcategories = () => {
   const [editSubcategoryValue, setEditSubcategoryValue] = useState<string>("");
 
   return (
-    <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
+    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
       <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-        <Typography color="primary" variant="overline" component={"h6"}>
-          Neue Unterkategorie anlegen
-        </Typography>
-        <List>
-          <ListItem>
-            <TextField
-              sx={{ width: "100%", marginRight: 1 }}
-              size="small"
-              id="subcategorey"
-              label="Unterkategorie"
-              variant="outlined"
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setSubcategoryInputValue(event.target.value)
-              }
-              value={subcategoryInputValue}
-            />
-            <Button
-              variant="contained"
-              sx={{ width: 150 }}
-              onClick={() => {
-                if (appContext?.selectedCategoryID && subcategoryInputValue) {
-                  createSubcategory(
-                    subcategoryInputValue,
-                    appContext?.selectedCategoryID
-                  );
-                  setSubcategoryInputValue("");
-                }
-              }}
-            >
-              Hinzufügen
-            </Button>
-          </ListItem>
-        </List>
+        <Card>
+          <CardContent>
+            <Typography color="primary" variant="overline" component={"h6"}>
+              Neue Unterkategorie anlegen
+            </Typography>
+            <List>
+              <ListItem>
+                <TextField
+                  sx={{ width: "100%", marginRight: 1 }}
+                  size="small"
+                  id="subcategorey"
+                  label="Unterkategorie"
+                  variant="outlined"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setSubcategoryInputValue(event.target.value)
+                  }
+                  value={subcategoryInputValue}
+                />
+                <Button
+                  variant="contained"
+                  sx={{ width: 150 }}
+                  onClick={() => {
+                    if (
+                      appContext?.selectedCategoryID &&
+                      subcategoryInputValue
+                    ) {
+                      createSubcategory(
+                        subcategoryInputValue,
+                        appContext?.selectedCategoryID
+                      );
+                      setSubcategoryInputValue("");
+                    }
+                  }}
+                >
+                  Hinzufügen
+                </Button>
+              </ListItem>
+            </List>
+          </CardContent>
+        </Card>
       </Box>
 
       <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-        <Typography color="primary" variant="overline" component={"h6"}>
-          Kategorie bearbeiten
-        </Typography>
-        <List>
-          {appContext?.selectedCategoryID &&
-            getCategoryByID(appContext?.selectedCategoryID)?.subcategories?.map(
-              (subcategory) => (
-                <ListItem key={subcategory.id} divider>
-                  {editSubcategoryID === subcategory.id ? (
-                    <ListItemText>
-                      <Box sx={{ display: "flex" }}>
-                        <TextField
-                          size="small"
-                          sx={{ flexGrow: 1, marginRight: 1 }}
-                          id="edit-subcategorey"
-                          label="Unterkategorie bearbeiten"
-                          variant="outlined"
-                          value={editSubcategoryValue}
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => setEditSubcategoryValue(event.target.value)}
-                        />
-                        <IconButton
-                          onClick={() => {
-                            changeSubcategoryName(
-                              editSubcategoryID,
-                              editSubcategoryValue
-                            );
-                            setEditSubcategoryID("");
-                          }}
-                        >
-                          <Save />
-                        </IconButton>
-                        <IconButton onClick={() => setEditSubcategoryID("")}>
-                          <Cancel />
-                        </IconButton>
-                      </Box>
-                    </ListItemText>
-                  ) : (
-                    <ListItemText>
-                      <Typography>{subcategory.name}</Typography>
-                      <Typography fontSize={"small"}>
-                        {subcategory.cards.length} Karteikarten
-                      </Typography>
-                    </ListItemText>
-                  )}
-                  <IconButton
-                    onClick={() => {
-                      setEditSubcategoryID(subcategory.id);
-                      setEditSubcategoryValue(subcategory.name);
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => deleteSubcategory(subcategory.id)}>
-                    <Delete />
-                  </IconButton>
-                </ListItem>
-              )
-            )}
-        </List>
+        <Card>
+          <CardContent>
+            <Typography color="primary" variant="overline" component={"h6"}>
+              Kategorie bearbeiten
+            </Typography>
+            <List>
+              {appContext?.selectedCategoryID &&
+                getCategoryByID(
+                  appContext?.selectedCategoryID
+                )?.subcategories?.map((subcategory) => (
+                  <ListItem key={subcategory.id} divider>
+                    {editSubcategoryID === subcategory.id ? (
+                      <ListItemText>
+                        <Box sx={{ display: "flex" }}>
+                          <TextField
+                            size="small"
+                            sx={{ flexGrow: 1, marginRight: 1 }}
+                            id="edit-subcategorey"
+                            label="Unterkategorie bearbeiten"
+                            variant="outlined"
+                            value={editSubcategoryValue}
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => setEditSubcategoryValue(event.target.value)}
+                          />
+                          <IconButton
+                            onClick={() => {
+                              changeSubcategoryName(
+                                editSubcategoryID,
+                                editSubcategoryValue
+                              );
+                              setEditSubcategoryID("");
+                            }}
+                          >
+                            <Save />
+                          </IconButton>
+                          <IconButton onClick={() => setEditSubcategoryID("")}>
+                            <Cancel />
+                          </IconButton>
+                        </Box>
+                      </ListItemText>
+                    ) : (
+                      <ListItemText>
+                        <Typography>{subcategory.name}</Typography>
+                        <Typography fontSize={"small"}>
+                          {subcategory.cards.length} Karteikarten
+                        </Typography>
+                      </ListItemText>
+                    )}
+                    <IconButton
+                      onClick={() => {
+                        setEditSubcategoryID(subcategory.id);
+                        setEditSubcategoryValue(subcategory.name);
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => deleteSubcategory(subcategory.id)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItem>
+                ))}
+            </List>
+          </CardContent>
+        </Card>
       </Box>
     </Box>
   );

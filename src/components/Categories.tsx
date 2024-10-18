@@ -63,112 +63,122 @@ export const Categories = () => {
     <>
       <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
         <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-          <Typography color="primary" variant="overline" component={"h6"}>
-            Neue Kategorie anlegen
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemText>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    id="add-category"
-                    label="Neue Kategorie"
-                    variant="outlined"
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      setCategoryInputValue(event.target.value);
-                    }}
-                    value={categoryInputValue}
-                    sx={{ flexGrow: 1, marginRight: 1 }}
-                  />
+          <Card>
+            <CardContent>
+              <Typography color="primary" variant="overline" component={"h6"}>
+                Neue Kategorie anlegen
+              </Typography>
+              <List>
+                <ListItem>
+                  <ListItemText>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        id="add-category"
+                        label="Neue Kategorie"
+                        variant="outlined"
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>
+                        ) => {
+                          setCategoryInputValue(event.target.value);
+                        }}
+                        value={categoryInputValue}
+                        sx={{ flexGrow: 1, marginRight: 1 }}
+                      />
 
-                  <Button
-                    sx={{ width: 150 }}
-                    type="submit"
-                    variant="contained"
-                    onClick={handleCreateCategory}
-                  >
-                    Hinzufügen
-                  </Button>
-                </Box>
-              </ListItemText>
-            </ListItem>
-          </List>
+                      <Button
+                        sx={{ width: 150 }}
+                        type="submit"
+                        variant="contained"
+                        onClick={handleCreateCategory}
+                      >
+                        Hinzufügen
+                      </Button>
+                    </Box>
+                  </ListItemText>
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
         </Box>
 
         <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-          <Typography color="primary" variant="overline" component={"h6"}>
-            Kategorie wählen
-          </Typography>
-          <List>
-            {categories.map((category) => (
-              <ListItem divider key={category.id}>
-                {editCategoryID === category.id ? (
-                  <>
-                    <ListItemText>
-                      <FormControl fullWidth>
-                        <TextField
-                          size="small"
-                          value={editCategoryValue}
-                          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setEditCategoryValue(event.target.value)
-                          }
-                        />
-                      </FormControl>
-                    </ListItemText>
-                    <Stack direction={"row"}>
-                      <IconButton
-                        size="small"
-                        onClick={() =>
-                          handleSaveCategory(category.id, editCategoryValue)
-                        }
+          <Card>
+            <CardContent>
+              <Typography color="primary" variant="overline" component={"h6"}>
+                Kategorie wählen
+              </Typography>
+              <List>
+                {categories.map((category) => (
+                  <ListItem divider key={category.id}>
+                    {editCategoryID === category.id ? (
+                      <>
+                        <ListItemText>
+                          <FormControl fullWidth>
+                            <TextField
+                              size="small"
+                              value={editCategoryValue}
+                              onChange={(
+                                event: ChangeEvent<HTMLInputElement>
+                              ) => setEditCategoryValue(event.target.value)}
+                            />
+                          </FormControl>
+                        </ListItemText>
+                        <Stack direction={"row"}>
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleSaveCategory(category.id, editCategoryValue)
+                            }
+                          >
+                            <Save />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() => setEditCategoryID("")}
+                          >
+                            <Cancel />
+                          </IconButton>
+                        </Stack>
+                      </>
+                    ) : (
+                      <ListItemButton
+                        onClick={() => {
+                          appContext?.setSelectedCategoryID(category.id);
+                        }}
                       >
-                        <Save />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => setEditCategoryID("")}
-                      >
-                        <Cancel />
-                      </IconButton>
-                    </Stack>
-                  </>
-                ) : (
-                  <ListItemButton
-                    onClick={() => {
-                      appContext?.setSelectedCategoryID(category.id);
-                    }}
-                  >
-                    <ListItemIcon>
-                      <Category />
-                    </ListItemIcon>
-                    <ListItemText>{category.name}</ListItemText>
-                  </ListItemButton>
-                )}
+                        <ListItemIcon>
+                          <Category />
+                        </ListItemIcon>
+                        <ListItemText>{category.name}</ListItemText>
+                      </ListItemButton>
+                    )}
 
-                <IconButton
-                  onClick={() => {
-                    handleEditCategory(category.id, category.name);
-                  }}
-                >
-                  <Edit />
-                </IconButton>
-                <IconButton onClick={() => deleteCategorey(category.id)}>
-                  <Delete />
-                </IconButton>
-              </ListItem>
-            ))}
-          </List>
-          <Box sx={{ display: "flex", justifyContent: "right", my: 2 }}>
-            <Button
-              color="error"
-              onClick={() => reset()}
-              startIcon={<Warning />}
-            >
-              Alle Daten löschen
-            </Button>
-          </Box>
+                    <IconButton
+                      onClick={() => {
+                        handleEditCategory(category.id, category.name);
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => deleteCategorey(category.id)}>
+                      <Delete />
+                    </IconButton>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+            <CardActions sx={{ justifyContent: "right", marginRight: 1 }}>
+              <Button
+                color="error"
+                onClick={() => reset()}
+                startIcon={<Warning />}
+              >
+                Alle Daten löschen
+              </Button>
+            </CardActions>
+          </Card>
         </Box>
       </Box>
     </>

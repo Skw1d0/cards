@@ -23,7 +23,7 @@ export const light = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          // backgroundColor: "#cccccc", // Setze hier die gewünschte Hintergrundfarbe
+          backgroundColor: "#eeeeee", // Setze hier die gewünschte Hintergrundfarbe
         },
       },
     },

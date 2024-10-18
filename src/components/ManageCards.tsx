@@ -5,6 +5,8 @@ import {
   AccordionSummary,
   Box,
   Button,
+  Card,
+  CardContent,
   Divider,
   FormControl,
   InputLabel,
@@ -74,245 +76,271 @@ export const ManageCards = () => {
       {getSubcategoryLength() === 0 ? (
         <DashboardNoSubcategory />
       ) : (
-        <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-            <Box>
-              <Typography color="primary" variant="overline" component={"h6"}>
-                Einstellungen
-              </Typography>
-              <List>
-                <ListItem>
-                  <FormControl fullWidth>
-                    <InputLabel id="select-subcategories-label" size="small">
-                      Unterkategorie
-                    </InputLabel>
-                    <Select
-                      size="small"
-                      labelId="select-subcategories-label"
-                      id="subcategories-select"
-                      label="Unterkategorie"
-                      value={subcategoryID}
-                      onChange={handleChange}
-                    >
-                      {appContext?.selectedCategoryID &&
-                        getCategoryByID(
-                          appContext.selectedCategoryID
-                        )?.subcategories.map((subcategory) => (
-                          <MenuItem key={subcategory.id} value={subcategory.id}>
-                            {subcategory.name}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </ListItem>
-              </List>
-            </Box>
-
-            {subcategoryID && (
-              <Box sx={{ width: { xs: "100%", sm: 500 }, marginTop: 2 }}>
+            <Card>
+              <CardContent>
                 <Typography color="primary" variant="overline" component={"h6"}>
-                  Neue Karte anlegen
+                  Einstellungen
                 </Typography>
                 <List>
                   <ListItem>
-                    <FormControl fullWidth sx={{ gap: 1 }}>
-                      <TextField
-                        sx={{ width: "100%" }}
+                    <FormControl fullWidth>
+                      <InputLabel id="select-subcategories-label" size="small">
+                        Unterkategorie
+                      </InputLabel>
+                      <Select
                         size="small"
-                        label="Frage"
-                        variant="outlined"
-                        value={cardQuestion}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                          setCardQuestion(event.target.value)
-                        }
-                      />
-                      <TextField
-                        multiline
-                        size="small"
-                        rows={4}
-                        sx={{ width: "100%" }}
-                        label="Antwort"
-                        variant="outlined"
-                        value={cardAnswer}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                          setCardAnswer(event.target.value)
-                        }
-                      />
-                      <Box sx={{ display: "flex", justifyContent: "right" }}>
-                        <Button
-                          variant="contained"
-                          disabled={
-                            cardAnswer === "" ||
-                            cardQuestion === "" ||
-                            subcategoryID === ""
-                          }
-                          onClick={() => {
-                            addCard(subcategoryID, {
-                              id: v4(),
-                              time: Date.now(),
-                              question: cardQuestion,
-                              answer: cardAnswer,
-                              statistics: [],
-                            });
-                            setCardQuestion("");
-                            setCardAnswer("");
-                          }}
-                        >
-                          Speichern
-                        </Button>
-                      </Box>
+                        labelId="select-subcategories-label"
+                        id="subcategories-select"
+                        label="Unterkategorie"
+                        value={subcategoryID}
+                        onChange={handleChange}
+                      >
+                        {appContext?.selectedCategoryID &&
+                          getCategoryByID(
+                            appContext.selectedCategoryID
+                          )?.subcategories.map((subcategory) => (
+                            <MenuItem
+                              key={subcategory.id}
+                              value={subcategory.id}
+                            >
+                              {subcategory.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
                     </FormControl>
                   </ListItem>
                 </List>
+              </CardContent>
+            </Card>
+
+            {subcategoryID && (
+              <Box sx={{ width: { xs: "100%", sm: 500 }, marginTop: 2 }}>
+                <Card>
+                  <CardContent>
+                    <Typography
+                      color="primary"
+                      variant="overline"
+                      component={"h6"}
+                    >
+                      Neue Karte anlegen
+                    </Typography>
+                    <List>
+                      <ListItem>
+                        <FormControl fullWidth sx={{ gap: 1 }}>
+                          <TextField
+                            sx={{ width: "100%" }}
+                            size="small"
+                            label="Frage"
+                            variant="outlined"
+                            value={cardQuestion}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                              setCardQuestion(event.target.value)
+                            }
+                          />
+                          <TextField
+                            multiline
+                            size="small"
+                            rows={4}
+                            sx={{ width: "100%" }}
+                            label="Antwort"
+                            variant="outlined"
+                            value={cardAnswer}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                              setCardAnswer(event.target.value)
+                            }
+                          />
+                          <Box
+                            sx={{ display: "flex", justifyContent: "right" }}
+                          >
+                            <Button
+                              variant="contained"
+                              disabled={
+                                cardAnswer === "" ||
+                                cardQuestion === "" ||
+                                subcategoryID === ""
+                              }
+                              onClick={() => {
+                                addCard(subcategoryID, {
+                                  id: v4(),
+                                  time: Date.now(),
+                                  question: cardQuestion,
+                                  answer: cardAnswer,
+                                  statistics: [],
+                                });
+                                setCardQuestion("");
+                                setCardAnswer("");
+                              }}
+                            >
+                              Speichern
+                            </Button>
+                          </Box>
+                        </FormControl>
+                      </ListItem>
+                    </List>
+                  </CardContent>
+                </Card>
               </Box>
             )}
           </Box>
 
           {subcategoryID && (
             <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-              <Typography color="primary" variant="overline" component={"h6"}>
-                Karten bearbeiten
-              </Typography>
-              <Box
-                sx={{
-                  padding: 2,
-                  overflow: { lg: "auto" },
-                  height: { lg: 500 },
-                }}
-              >
-                {getCards().length > 0 ? (
-                  getCards().map((card) => (
-                    <Accordion key={card.id} onChange={() => setEditCardID("")}>
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography>{card.question}</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {editCardID === card.id ? (
-                          <FormControl fullWidth sx={{ gap: 2 }}>
-                            <TextField
-                              label="Neue Frage"
-                              value={newCardQuestion}
-                              onChange={(
-                                event: ChangeEvent<HTMLInputElement>
-                              ) => setNewCardQuestion(event.target.value)}
-                            />
-                            <TextField
-                              label="Neue Antwort"
-                              multiline
-                              rows={4}
-                              value={newCardAnswer}
-                              onChange={(
-                                event: ChangeEvent<HTMLInputElement>
-                              ) => setNewCardAnswer(event.target.value)}
-                            />
-                          </FormControl>
-                        ) : (
-                          <>
-                            <Typography>{card.answer}</Typography>
-                            <Divider variant="fullWidth" sx={{ my: 2 }} />
-                            <Stack direction={"column"}>
-                              <Stack direction={"row"}>
-                                <Typography
-                                  sx={{ flexGrow: 1 }}
-                                  fontWeight={"light"}
+              <Card>
+                <CardContent>
+                  <Typography
+                    color="primary"
+                    variant="overline"
+                    component={"h6"}
+                  >
+                    Karten bearbeiten
+                  </Typography>
+                  <Box
+                    sx={{
+                      padding: 2,
+                      overflow: { lg: "auto" },
+                      height: { lg: 500 },
+                    }}
+                  >
+                    {getCards().length > 0 ? (
+                      getCards().map((card) => (
+                        <Accordion
+                          key={card.id}
+                          onChange={() => setEditCardID("")}
+                        >
+                          <AccordionSummary expandIcon={<ExpandMore />}>
+                            <Typography>{card.question}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            {editCardID === card.id ? (
+                              <FormControl fullWidth sx={{ gap: 2 }}>
+                                <TextField
+                                  label="Neue Frage"
+                                  value={newCardQuestion}
+                                  onChange={(
+                                    event: ChangeEvent<HTMLInputElement>
+                                  ) => setNewCardQuestion(event.target.value)}
+                                />
+                                <TextField
+                                  label="Neue Antwort"
+                                  multiline
+                                  rows={4}
+                                  value={newCardAnswer}
+                                  onChange={(
+                                    event: ChangeEvent<HTMLInputElement>
+                                  ) => setNewCardAnswer(event.target.value)}
+                                />
+                              </FormControl>
+                            ) : (
+                              <>
+                                <Typography>{card.answer}</Typography>
+                                <Divider variant="fullWidth" sx={{ my: 2 }} />
+                                <Stack direction={"column"}>
+                                  <Stack direction={"row"}>
+                                    <Typography
+                                      sx={{ flexGrow: 1 }}
+                                      fontWeight={"light"}
+                                    >
+                                      Karte erstellt:
+                                    </Typography>
+                                    <Typography fontWeight={"light"}>
+                                      {new Date(card.time).toLocaleString()} Uhr
+                                    </Typography>
+                                  </Stack>
+                                  <Stack direction={"row"}>
+                                    <Typography
+                                      sx={{ flexGrow: 1 }}
+                                      fontWeight={"light"}
+                                    >
+                                      Abgefragt:
+                                    </Typography>
+                                    <Typography fontWeight={"light"}>
+                                      {card.statistics.length}
+                                    </Typography>
+                                  </Stack>
+                                  <Stack direction={"row"}>
+                                    <Typography
+                                      sx={{ flexGrow: 1 }}
+                                      fontWeight={"light"}
+                                    >
+                                      Richtig:
+                                    </Typography>
+                                    <Typography fontWeight={"light"}>
+                                      {
+                                        card.statistics.filter(
+                                          (stat) => stat.correct
+                                        ).length
+                                      }
+                                    </Typography>
+                                  </Stack>
+                                  <Stack direction={"row"}>
+                                    <Typography
+                                      sx={{ flexGrow: 1 }}
+                                      fontWeight={"light"}
+                                    >
+                                      Falsch:
+                                    </Typography>
+                                    <Typography fontWeight={"light"}>
+                                      {
+                                        card.statistics.filter(
+                                          (stat) => !stat.correct
+                                        ).length
+                                      }
+                                    </Typography>
+                                  </Stack>
+                                </Stack>
+                              </>
+                            )}
+                          </AccordionDetails>
+                          <AccordionActions>
+                            {editCardID === card.id ? (
+                              <>
+                                <Button
+                                  onClick={() => {
+                                    changeCard(
+                                      card.id,
+                                      newCardQuestion,
+                                      newCardAnswer
+                                    );
+                                    setEditCardID("");
+                                  }}
                                 >
-                                  Karte erstellt:
-                                </Typography>
-                                <Typography fontWeight={"light"}>
-                                  {new Date(card.time).toLocaleString()} Uhr
-                                </Typography>
-                              </Stack>
-                              <Stack direction={"row"}>
-                                <Typography
-                                  sx={{ flexGrow: 1 }}
-                                  fontWeight={"light"}
+                                  Speichern
+                                </Button>
+                                <Button onClick={() => setEditCardID("")}>
+                                  Abbrechen
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <Button
+                                  color="primary"
+                                  onClick={() => {
+                                    setNewCardQuestion(card.question);
+                                    setNewCardAnswer(card.answer);
+                                    setEditCardID(card.id);
+                                  }}
                                 >
-                                  Abgefragt:
-                                </Typography>
-                                <Typography fontWeight={"light"}>
-                                  {card.statistics.length}
-                                </Typography>
-                              </Stack>
-                              <Stack direction={"row"}>
-                                <Typography
-                                  sx={{ flexGrow: 1 }}
-                                  fontWeight={"light"}
+                                  Karte bearbeiten
+                                </Button>
+                                <Button
+                                  color="error"
+                                  onClick={() => deleteCard(card.id)}
                                 >
-                                  Richtig:
-                                </Typography>
-                                <Typography fontWeight={"light"}>
-                                  {
-                                    card.statistics.filter(
-                                      (stat) => stat.correct
-                                    ).length
-                                  }
-                                </Typography>
-                              </Stack>
-                              <Stack direction={"row"}>
-                                <Typography
-                                  sx={{ flexGrow: 1 }}
-                                  fontWeight={"light"}
-                                >
-                                  Falsch:
-                                </Typography>
-                                <Typography fontWeight={"light"}>
-                                  {
-                                    card.statistics.filter(
-                                      (stat) => !stat.correct
-                                    ).length
-                                  }
-                                </Typography>
-                              </Stack>
-                            </Stack>
-                          </>
-                        )}
-                      </AccordionDetails>
-                      <AccordionActions>
-                        {editCardID === card.id ? (
-                          <>
-                            <Button
-                              onClick={() => {
-                                changeCard(
-                                  card.id,
-                                  newCardQuestion,
-                                  newCardAnswer
-                                );
-                                setEditCardID("");
-                              }}
-                            >
-                              Speichern
-                            </Button>
-                            <Button onClick={() => setEditCardID("")}>
-                              Abbrechen
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              color="primary"
-                              onClick={() => {
-                                setNewCardQuestion(card.question);
-                                setNewCardAnswer(card.answer);
-                                setEditCardID(card.id);
-                              }}
-                            >
-                              Karte bearbeiten
-                            </Button>
-                            <Button
-                              color="error"
-                              onClick={() => deleteCard(card.id)}
-                            >
-                              Karte löschen
-                            </Button>
-                          </>
-                        )}
-                      </AccordionActions>
-                    </Accordion>
-                  ))
-                ) : (
-                  <Typography>Noch keine Karten angelegt.</Typography>
-                )}
-              </Box>
+                                  Karte löschen
+                                </Button>
+                              </>
+                            )}
+                          </AccordionActions>
+                        </Accordion>
+                      ))
+                    ) : (
+                      <Typography>Noch keine Karten angelegt.</Typography>
+                    )}
+                  </Box>
+                </CardContent>
+              </Card>
             </Box>
           )}
         </Box>
