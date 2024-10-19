@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader } from "@mui/material";
 import { BarChart, PieChart } from "@mui/x-charts";
 import { useCategoriesStore } from "../stores/storeCategories";
 import { useContext } from "react";
@@ -54,15 +54,12 @@ export const Charts = () => {
     <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
       <Box sx={{ width: { xs: "100%", sm: 500 } }}>
         <Card>
+          <CardHeader
+            sx={{ color: "primary.main" }}
+            title="Unterkategorien & Karten"
+            subheader="Hier siehst du deine Unterkategoriern und wie viele Karten sie beinhalten."
+          />
           <CardContent>
-            <Typography
-              color="primary"
-              variant="overline"
-              component={"h6"}
-              marginBottom={2}
-            >
-              Unterkategorien & Karten
-            </Typography>
             <Box
               display={"flex"}
               justifyContent={"center"}
@@ -95,15 +92,12 @@ export const Charts = () => {
 
       <Box sx={{ width: { xs: "100%", sm: 500 } }}>
         <Card>
+          <CardHeader
+            sx={{ color: "primary.main" }}
+            title="Beantwortete Fragen"
+            subheader="Hier siehst du, wie viele Karten du je Unterkategorie richitg oder falsch beantwortet hast."
+          />
           <CardContent>
-            <Typography
-              color="primary"
-              variant="overline"
-              component={"h6"}
-              marginBottom={2}
-            >
-              Beantwortete Fragen
-            </Typography>
             <Box
               display={"flex"}
               justifyContent={"center"}

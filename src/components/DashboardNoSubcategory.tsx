@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { useContext } from "react";
 import { DashboardContext } from "./Dashboard";
 
@@ -8,11 +8,15 @@ export const DashboardNoSubcategory = () => {
   return (
     <>
       <Card sx={{ width: { xs: "100%", sm: 500 } }}>
-        <CardHeader
-          title={"Keine Unterkategorie gefunden"}
-          subheader={"Bitte erstelle mindestens eine Unterkategorie."}
-        />
         <CardContent>
+          <Typography
+            color="primary"
+            variant="overline"
+            component={"h6"}
+            marginBottom={2}
+          >
+            Keine Unterkategorie angelegt
+          </Typography>
           <Button
             variant="contained"
             onClick={() =>

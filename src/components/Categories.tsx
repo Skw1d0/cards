@@ -2,8 +2,8 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
+  CardHeader,
   FormControl,
   IconButton,
   List,
@@ -18,23 +18,11 @@ import {
 import { useCategoriesStore } from "../stores/storeCategories";
 import { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "../App";
-import {
-  Cancel,
-  Category,
-  Delete,
-  Edit,
-  Save,
-  Warning,
-} from "@mui/icons-material";
+import { Cancel, Category, Delete, Edit, Save } from "@mui/icons-material";
 
 export const Categories = () => {
-  const {
-    categories,
-    createCategory,
-    deleteCategorey,
-    changeCategoryName,
-    reset,
-  } = useCategoriesStore();
+  const { categories, createCategory, deleteCategorey, changeCategoryName } =
+    useCategoriesStore();
   const appContext = useContext(AppContext);
 
   const [categoryInputValue, setCategoryInputValue] = useState("");
@@ -63,19 +51,23 @@ export const Categories = () => {
       <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
         <Box sx={{ width: { xs: "100%", sm: 500 } }}>
           <Card>
+            <CardHeader
+              sx={{ color: "primary.main" }}
+              title="Neue Kategorie"
+              subheader="Lege eine neue Kategorie an."
+            />
             <CardContent>
-              <Typography color="primary" variant="overline" component={"h6"}>
+              {/* <Typography color="primary" variant="overline" component={"h6"}>
                 Neue Kategorie anlegen
-              </Typography>
+              </Typography> */}
               <List>
                 <ListItem>
                   <ListItemText>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <TextField
                         fullWidth
-                        size="small"
                         id="add-category"
-                        label="Neue Kategorie"
+                        label="Kategoriename"
                         variant="outlined"
                         onChange={(
                           event: React.ChangeEvent<HTMLInputElement>
@@ -104,79 +96,74 @@ export const Categories = () => {
 
         <Box sx={{ width: { xs: "100%", sm: 500 } }}>
           <Card>
+            <CardHeader
+              sx={{ color: "primary.main" }}
+              title="Kategorie wählen"
+              subheader="Wähle eine Kategorie, die du üben oder bearbeiten willst."
+            />
             <CardContent>
-              <Typography color="primary" variant="overline" component={"h6"}>
-                Kategorie wählen
-              </Typography>
               <List>
-                {categories.map((category) => (
-                  <ListItem divider key={category.id}>
-                    {editCategoryID === category.id ? (
-                      <>
-                        <ListItemText>
-                          <FormControl fullWidth>
-                            <TextField
-                              size="small"
-                              value={editCategoryValue}
-                              onChange={(
-                                event: ChangeEvent<HTMLInputElement>
-                              ) => setEditCategoryValue(event.target.value)}
-                            />
-                          </FormControl>
-                        </ListItemText>
-                        <Stack direction={"row"}>
-                          <IconButton
-                            size="small"
-                            onClick={() =>
-                              handleSaveCategory(category.id, editCategoryValue)
-                            }
-                          >
-                            <Save />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() => setEditCategoryID("")}
-                          >
-                            <Cancel />
-                          </IconButton>
-                        </Stack>
-                      </>
-                    ) : (
-                      <ListItemButton
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <ListItem divider key={category.id}>
+                      {editCategoryID === category.id ? (
+                        <>
+                          <ListItemText>
+                            <FormControl fullWidth>
+                              <TextField
+                                value={editCategoryValue}
+                                onChange={(
+                                  event: ChangeEvent<HTMLInputElement>
+                                ) => setEditCategoryValue(event.target.value)}
+                              />
+                            </FormControl>
+                          </ListItemText>
+                          <Stack direction={"row"}>
+                            <IconButton
+                              onClick={() =>
+                                handleSaveCategory(
+                                  category.id,
+                                  editCategoryValue
+                                )
+                              }
+                            >
+                              <Save />
+                            </IconButton>
+                            <IconButton onClick={() => setEditCategoryID("")}>
+                              <Cancel />
+                            </IconButton>
+                          </Stack>
+                        </>
+                      ) : (
+                        <ListItemButton
+                          onClick={() => {
+                            appContext?.setSelectedCategoryID(category.id);
+                          }}
+                        >
+                          <ListItemIcon>
+                            <Category />
+                          </ListItemIcon>
+                          <ListItemText>{category.name}</ListItemText>
+                        </ListItemButton>
+                      )}
+
+                      <IconButton
                         onClick={() => {
-                          appContext?.setSelectedCategoryID(category.id);
+                          handleEditCategory(category.id, category.name);
                         }}
                       >
-                        <ListItemIcon>
-                          <Category />
-                        </ListItemIcon>
-                        <ListItemText>{category.name}</ListItemText>
-                      </ListItemButton>
-                    )}
-
-                    <IconButton
-                      onClick={() => {
-                        handleEditCategory(category.id, category.name);
-                      }}
-                    >
-                      <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => deleteCategorey(category.id)}>
-                      <Delete />
-                    </IconButton>
-                  </ListItem>
-                ))}
+                        <Edit />
+                      </IconButton>
+                      <IconButton onClick={() => deleteCategorey(category.id)}>
+                        <Delete />
+                      </IconButton>
+                    </ListItem>
+                  ))
+                ) : (
+                  <Typography>Keine Kategorie vorhanden</Typography>
+                )}
               </List>
             </CardContent>
-            <CardActions sx={{ justifyContent: "right", marginRight: 1 }}>
-              <Button
-                color="error"
-                onClick={() => reset()}
-                startIcon={<Warning />}
-              >
-                Alle Daten löschen
-              </Button>
-            </CardActions>
           </Card>
         </Box>
       </Box>

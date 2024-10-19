@@ -4,6 +4,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  CardHeader,
   Checkbox,
   FormControlLabel,
   LinearProgress,
@@ -74,15 +75,13 @@ export const Test = () => {
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
             <Card>
+              <CardHeader
+                sx={{ color: "primary.main" }}
+                title="Einstellungen"
+                subheader="Welche Einstellungen möchtest du für diesen Test verwenden?"
+              />
               <CardContent>
                 <Box sx={{ marginBottom: 3 }}>
-                  <Typography
-                    color="primary"
-                    variant="overline"
-                    component={"h6"}
-                  >
-                    Einstellugnen
-                  </Typography>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -98,11 +97,13 @@ export const Test = () => {
           </Box>
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
             <Card>
+              <CardHeader
+                sx={{ color: "primary.main" }}
+                title="Wähle deine Kategorie"
+                subheader="Welche Kategorie möchtest du üben? Wähle 'Alle Kategorien' um alle Karten zu üben."
+              />
               <CardContent>
-                <Typography color="primary" variant="overline" component={"h6"}>
-                  Wähle deine Kategorie
-                </Typography>
-                <List sx={{}}>
+                <List>
                   <ListItemButton divider onClick={() => handleStartTest()}>
                     <ListItemIcon>
                       <Quiz />
@@ -139,10 +140,12 @@ export const Test = () => {
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
             <Card>
+              <CardHeader
+                sx={{ color: "primary.main" }}
+                title="Test läuft..."
+                subheader="Beantworte die Fragen."
+              />
               <CardContent>
-                <Typography color="primary" variant="overline" component={"h6"}>
-                  Test läuft...
-                </Typography>
                 <Stack direction={"column"} sx={{ marginBottom: 2 }}>
                   <Typography sx={{ textAlign: "right" }}>
                     {currentCard + 1} / {cards.length}
@@ -160,9 +163,6 @@ export const Test = () => {
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
             <Card>
               <CardContent>
-                <Typography color="primary" variant="overline" component={"h6"}>
-                  Beantworte die Frage:
-                </Typography>
                 <Typography variant="h6" sx={{ marginBottom: 1 }}>
                   {cards[currentCard]?.question}
                 </Typography>

@@ -28,10 +28,12 @@ export interface Category {
 }
 
 export interface CategoriesState {
+  syncTime: number | undefined;
   categories: Category[];
 }
 
 export interface CategoriesActions {
+  setCategories: (value: Category[]) => void;
   createCategory: (name: string) => void;
   changeCategoryName: (id: string, name: string) => void;
   deleteCategorey: (id: string) => void;
@@ -48,11 +50,12 @@ export interface CategoriesActions {
   deleteCard: (id: string) => void;
   changeCard: (id: string, question: string, answer: string) => void;
   addCardStatistic: (id: string, time: number, isCorrect: boolean) => void;
-
+  setSyncTime: (value: number | undefined) => void;
   reset: () => void;
 }
 
 const initialState: CategoriesState = {
+  syncTime: undefined,
   categories: [],
 };
 
@@ -67,6 +70,10 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
   persist(
     (set, get) => ({
       ...initialState,
+
+      setCategories: (value: Category[]) => {
+        set({ categories: value });
+      },
 
       createCategory: (name: string) => {
         const { categories } = get();
@@ -329,6 +336,11 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
         });
 
         set({ categories: newCatogories });
+      },
+
+      setSyncTime: (value: number | undefined) => {
+        if (value === undefined) return;
+        set({ syncTime: value });
       },
 
       reset: () => {

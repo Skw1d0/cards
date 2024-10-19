@@ -89,19 +89,6 @@ export const DashboradNavigation = () => {
 
           <ListItemButton
             onClick={() => {
-              dashboardContext?.setDeschboardType("edit-subcategories");
-              handleClose();
-            }}
-          >
-            <ListItemIcon>
-              <Folder />
-            </ListItemIcon>
-            <ListItemText>Unterkategorien verwalten</ListItemText>
-          </ListItemButton>
-
-          <ListItemButton
-            divider
-            onClick={() => {
               dashboardContext?.setDeschboardType("edit-cards");
               handleClose();
             }}
@@ -112,6 +99,18 @@ export const DashboradNavigation = () => {
             <ListItemText>Karteikarten verwalten</ListItemText>
           </ListItemButton>
 
+          <ListItemButton
+            divider
+            onClick={() => {
+              dashboardContext?.setDeschboardType("edit-subcategories");
+              handleClose();
+            }}
+          >
+            <ListItemIcon>
+              <Folder />
+            </ListItemIcon>
+            <ListItemText>Unterkategorien verwalten</ListItemText>
+          </ListItemButton>
           <ListItemButton
             onClick={() => {
               appContext?.setSelectedCategoryID(undefined);

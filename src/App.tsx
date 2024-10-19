@@ -6,12 +6,17 @@ import { light, dark } from "./themes/themes";
 import { createContext, useEffect, useState } from "react";
 import { Dashboard } from "./components/Dashboard";
 import { Categories } from "./components/Categories";
+import { Settings } from "./components/Settings";
+import { AuthProvider } from "./context/AuthContext";
 
 type ThemeTypes = "auto" | "light" | "dark";
+type PageTypes = "cards" | "settings";
 
 interface AppContextProps {
   isDarkMode: boolean;
   selectedCategoryID: string | undefined;
+  page: PageTypes;
+  setPage: (value: PageTypes) => void;
   setIsDarkMode: (value: boolean) => void;
   setSelectedCategoryID: (id: string | undefined) => void;
 }
@@ -21,6 +26,8 @@ export const AppContext = createContext<AppContextProps | undefined>(undefined);
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [theme] = useState<ThemeTypes>("auto");
+  const [page, setPage] = useState<PageTypes>("cards");
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedCategoryID, setSelectedCategoryID] = useState<
     string | undefined
@@ -34,23 +41,34 @@ function App() {
 
   return (
     <div className="App">
-      <ThemeProvider theme={isDarkMode ? dark : light}>
-        <CssBaseline />
-        <AppContext.Provider
-          value={{
-            selectedCategoryID,
-            setSelectedCategoryID,
-            isDarkMode,
-            setIsDarkMode,
-          }}
-        >
-          <NavigartionBar />
-          <Box sx={{ marginTop: 10 }}>
-            {selectedCategoryID === undefined && <Categories />}
-            {selectedCategoryID !== undefined && <Dashboard />}
-          </Box>
-        </AppContext.Provider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={isDarkMode ? dark : light}>
+          <CssBaseline />
+          <AppContext.Provider
+            value={{
+              selectedCategoryID,
+              setSelectedCategoryID,
+              page,
+              setPage,
+              isDarkMode,
+              setIsDarkMode,
+            }}
+          >
+            <NavigartionBar />
+            {page === "cards" && (
+              <Box marginTop={10}>
+                {selectedCategoryID === undefined && <Categories />}
+                {selectedCategoryID !== undefined && <Dashboard />}
+              </Box>
+            )}
+            {page === "settings" && (
+              <Box marginTop={10}>
+                <Settings />
+              </Box>
+            )}
+          </AppContext.Provider>
+        </ThemeProvider>
+      </AuthProvider>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   CardContent,
+  CardHeader,
   Divider,
   FormControl,
   InputLabel,
@@ -79,18 +80,19 @@ export const ManageCards = () => {
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
             <Card>
+              <CardHeader
+                sx={{ color: "primary.main" }}
+                title="Einstellungen"
+                subheader="Stelle die Unterkategorie ein, deren Karten du bearbeiten willst."
+              />
               <CardContent>
-                <Typography color="primary" variant="overline" component={"h6"}>
-                  Einstellungen
-                </Typography>
                 <List>
                   <ListItem>
                     <FormControl fullWidth>
-                      <InputLabel id="select-subcategories-label" size="small">
+                      <InputLabel id="select-subcategories-label">
                         Unterkategorie
                       </InputLabel>
                       <Select
-                        size="small"
                         labelId="select-subcategories-label"
                         id="subcategories-select"
                         label="Unterkategorie"
@@ -118,20 +120,17 @@ export const ManageCards = () => {
             {subcategoryID && (
               <Box sx={{ width: { xs: "100%", sm: 500 }, marginTop: 2 }}>
                 <Card>
+                  <CardHeader
+                    sx={{ color: "primary.main" }}
+                    title="Neue Karte anlegen"
+                    subheader="Gib die Frage und die Antwort deiner neuen Kartekarte an."
+                  />
                   <CardContent>
-                    <Typography
-                      color="primary"
-                      variant="overline"
-                      component={"h6"}
-                    >
-                      Neue Karte anlegen
-                    </Typography>
                     <List>
                       <ListItem>
                         <FormControl fullWidth sx={{ gap: 1 }}>
                           <TextField
                             sx={{ width: "100%" }}
-                            size="small"
                             label="Frage"
                             variant="outlined"
                             value={cardQuestion}
@@ -141,7 +140,6 @@ export const ManageCards = () => {
                           />
                           <TextField
                             multiline
-                            size="small"
                             rows={4}
                             sx={{ width: "100%" }}
                             label="Antwort"
@@ -188,19 +186,17 @@ export const ManageCards = () => {
           {subcategoryID && (
             <Box sx={{ width: { xs: "100%", sm: 500 } }}>
               <Card>
+                <CardHeader
+                  sx={{ color: "primary.main" }}
+                  title="Karten bearbeiten"
+                  subheader="Wähle Karteikarte, die du bearbeiten oder löschen willst."
+                />
                 <CardContent>
-                  <Typography
-                    color="primary"
-                    variant="overline"
-                    component={"h6"}
-                  >
-                    Karten bearbeiten
-                  </Typography>
                   <Box
                     sx={{
                       padding: 2,
                       overflow: { lg: "auto" },
-                      height: { lg: 500 },
+                      height: { lg: 450 },
                     }}
                   >
                     {getCards().length > 0 ? (

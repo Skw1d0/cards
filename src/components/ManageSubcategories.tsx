@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  CardHeader,
   IconButton,
   List,
   ListItem,
@@ -33,15 +34,16 @@ export const ManageSubcategories = () => {
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
       <Box sx={{ width: { xs: "100%", sm: 500 } }}>
         <Card>
+          <CardHeader
+            sx={{ color: "primary.main" }}
+            title="Neue Unterkategorie anlegen"
+            subheader="Lege eine neue Unterkategorie an."
+          />
           <CardContent>
-            <Typography color="primary" variant="overline" component={"h6"}>
-              Neue Unterkategorie anlegen
-            </Typography>
             <List>
               <ListItem>
                 <TextField
                   sx={{ width: "100%", marginRight: 1 }}
-                  size="small"
                   id="subcategorey"
                   label="Unterkategorie"
                   variant="outlined"
@@ -76,10 +78,12 @@ export const ManageSubcategories = () => {
 
       <Box sx={{ width: { xs: "100%", sm: 500 } }}>
         <Card>
+          <CardHeader
+            sx={{ color: "primary.main" }}
+            title="Unterkategorie bearbeiten"
+            subheader="Hier kannst du die Unterkategorien bearbeiten oder löschen."
+          />
           <CardContent>
-            <Typography color="primary" variant="overline" component={"h6"}>
-              Kategorie bearbeiten
-            </Typography>
             <List>
               {appContext?.selectedCategoryID &&
                 getCategoryByID(
@@ -90,7 +94,6 @@ export const ManageSubcategories = () => {
                       <ListItemText>
                         <Box sx={{ display: "flex" }}>
                           <TextField
-                            size="small"
                             sx={{ flexGrow: 1, marginRight: 1 }}
                             id="edit-subcategorey"
                             label="Unterkategorie bearbeiten"
