@@ -195,8 +195,8 @@ export const ManageCards = () => {
                   <Box
                     sx={{
                       padding: 2,
-                      overflow: { lg: "auto" },
-                      height: { lg: 450 },
+                      overflow: { sm: "auto" },
+                      height: { sm: 500 },
                     }}
                   >
                     {getCards().length > 0 ? (
