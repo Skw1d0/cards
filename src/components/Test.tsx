@@ -23,6 +23,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import { Quiz } from "@mui/icons-material";
+import { DashboardNoSubcategory } from "./DashboardNoSubcategory";
 
 export const Test = () => {
   const { getCategoryByID, getCards, addCardStatistic } = useCategoriesStore();
@@ -69,9 +70,25 @@ export const Test = () => {
     setPorgress(Math.floor((100 / cards.length) * (currentCard + 1)));
   };
 
+  const getSubcategoryLength = (): number => {
+    if (appContext?.selectedCategoryID) {
+      const length = getCategoryByID(appContext?.selectedCategoryID)
+        ?.subcategories.length;
+      if (length) {
+        return length;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <>
-      {!isTesting ? (
+      {getSubcategoryLength() === 0 ? (
+        <DashboardNoSubcategory />
+      ) : !isTesting ? (
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           <Box sx={{ width: { xs: "100%", sm: 500 } }}>
             <Card>

@@ -343,7 +343,7 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
         set({ syncTime: value });
       },
 
-      reset: () => {
+      reset: async () => {
         set(initialState);
       },
     }),

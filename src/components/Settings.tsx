@@ -15,23 +15,37 @@ import {
   Typography,
 } from "@mui/material";
 import { useCategoriesStore } from "../stores/storeCategories";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 import { useFirestore } from "../hooks/useFirestore";
+import { AppContext } from "../App";
 
 export const Settings = () => {
   const { upload, download } = useFirestore();
+  const appContext = useContext(AppContext);
 
   const { reset, setCategories, syncTime, setSyncTime } = useCategoriesStore();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const { user, googleSignIn, googleSignOut } = useAuth();
 
-  const handleResetLocalStore = () => {
-    setOpenSnackbar(true);
-    setSnackbarMessage("Lokale Daten gelöscht.");
-    reset();
+  const handleResetLocalStore = async () => {
+    try {
+      appContext?.setSelectedCategoryID(undefined);
+      reset();
+      if (user) {
+        const data = await download();
+        if (data) {
+          setSyncTime(data.syncTime);
+        }
+      }
+      setOpenSnackbar(true);
+      setSnackbarMessage("Lokale Daten gelöscht.");
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   };
 
   const handleUpload = async () => {
@@ -47,15 +61,26 @@ export const Settings = () => {
   };
 
   const handleDownload = async () => {
-    const success = await download();
-    if (success) {
-      setCategories(success.categories);
-      setSyncTime(success.syncTime);
+    const data = await download();
+    if (data) {
+      setCategories(data.categories);
+      setSyncTime(data.syncTime);
       setSnackbarMessage("Erfolgreiche geladen.");
       setOpenSnackbar(true);
     } else {
       setSnackbarMessage("Beim Laden der Daten ist ein Fehler aufgetreten.");
       setOpenSnackbar(true);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleSignIn();
+      const success = await download();
+      setSyncTime(success?.syncTime);
+    } catch (error) {
+      console.log(error);
+      return;
     }
   };
 
@@ -77,7 +102,7 @@ export const Settings = () => {
                   startIcon={<Google />}
                   color="primary"
                   variant="contained"
-                  onClick={googleSignIn}
+                  onClick={() => handleGoogleSignIn()}
                 >
                   Anmelden mit Google
                 </Button>
