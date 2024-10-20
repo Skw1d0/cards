@@ -65,6 +65,7 @@ export const Settings = () => {
     if (data) {
       setCategories(data.categories);
       setSyncTime(data.syncTime);
+      appContext?.setSelectedCategoryID(undefined);
       setSnackbarMessage("Erfolgreiche geladen.");
       setOpenSnackbar(true);
     } else {
