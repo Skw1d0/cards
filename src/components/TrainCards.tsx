@@ -13,6 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   Skeleton,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
@@ -25,15 +26,19 @@ import { AppContext } from "../App";
 import { Quiz } from "@mui/icons-material";
 import { DashboardNoSubcategory } from "./DashboardNoSubcategory";
 
-export const Test = () => {
+export const TrainCards = () => {
   const { getCategoryByID, getCards, addCardStatistic } = useCategoriesStore();
   const [isTesting, setIsTesting] = useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [messageSnackbar, setMessageSnackbar] = useState("");
 
   const [progress, setPorgress] = useState(0);
   const [currentCard, setCurrentCard] = useState(0);
   const [cards, setCards] = useState<CardStore[]>([]);
   const [isCardCoverd, setIsCardCoverd] = useState(true);
-  const [shuffle, setShuffle] = useState(false);
+  const [shuffleCards, setShuffleCards] = useState(true);
+  const [trainingCards, setTrainingCards] = useState(true);
 
   const appContext = useContext(AppContext);
 
@@ -41,11 +46,16 @@ export const Test = () => {
     if (!appContext?.selectedCategoryID) return;
     const newCards: CardStore[] = getCards(
       appContext?.selectedCategoryID,
-      subcategory,
-      shuffle
+      shuffleCards,
+      trainingCards,
+      subcategory
     );
 
-    if (!newCards.length) return;
+    if (!newCards.length) {
+      setOpenSnackbar(true);
+      setMessageSnackbar("Keine Karten vorhanden.");
+      return;
+    }
 
     setCards(newCards);
     setCurrentCard(0);
@@ -85,7 +95,7 @@ export const Test = () => {
   };
 
   return (
-    <>
+    <Box>
       {getSubcategoryLength() === 0 ? (
         <DashboardNoSubcategory />
       ) : !isTesting ? (
@@ -102,11 +112,20 @@ export const Test = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={shuffle}
-                        onClick={() => setShuffle(!shuffle)}
+                        checked={shuffleCards}
+                        onClick={() => setShuffleCards(!shuffleCards)}
                       />
                     }
-                    label="Zufällige Abfrage der Karten"
+                    label="Zufällige Abfrage der Karten."
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={trainingCards}
+                        onClick={() => setTrainingCards(!trainingCards)}
+                      />
+                    }
+                    label="Bevorzugt Karten abfragen, die ich nicht richtig beantwortet habe."
                   />
                 </Box>
               </CardContent>
@@ -230,6 +249,12 @@ export const Test = () => {
           </Box>
         </Box>
       )}
-    </>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+        message={messageSnackbar}
+      />
+    </Box>
   );
 };

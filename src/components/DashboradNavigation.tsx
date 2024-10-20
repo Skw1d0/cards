@@ -84,7 +84,7 @@ export const DashboradNavigation = () => {
             <ListItemIcon>
               <PsychologyAlt />
             </ListItemIcon>
-            <ListItemText>Wissen testen</ListItemText>
+            <ListItemText>Karteikarten lernen</ListItemText>
           </ListItemButton>
 
           <ListItemButton

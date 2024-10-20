@@ -44,8 +44,9 @@ export interface CategoriesActions {
   addCard: (subcategoryID: string, card: Card) => void;
   getCards: (
     categoryID: string,
-    subcategoryID?: string,
-    shuffle?: boolean
+    shuffle: boolean,
+    training: boolean,
+    subcategoryID?: string
   ) => Card[];
   deleteCard: (id: string) => void;
   changeCard: (id: string, question: string, answer: string) => void;
@@ -267,15 +268,17 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
 
       getCards: (
         categoryID: string,
-        subcategoryID?: string,
-        isShuffle?: boolean
+        isShuffle: boolean,
+        isTraining: boolean,
+        subcategoryID?: string
       ): Card[] => {
         const { categories } = get();
+        let cards: Card[] = [];
 
         const category = categories.find((e) => e.id === categoryID);
         if (category === undefined) return [];
 
-        // SUBCATEGORY SELECTED
+        // GET CARDS
         if (subcategoryID) {
           const subcategory = category.subcategories.find(
             (subcategory) => subcategory.id === subcategoryID
@@ -284,11 +287,43 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
           if (subcategory === undefined) {
             return [];
           }
-          return isShuffle ? shuffle(subcategory.cards) : subcategory.cards;
+          cards = subcategory.cards;
+        } else {
+          cards = category.subcategories
+            .map((subcategory) => subcategory.cards)
+            .flat();
         }
 
-        const cards = category.subcategories.map((e) => e.cards).flat();
-        return isShuffle ? shuffle(cards) : cards;
+        // GET TRAINING CARDS
+        const trainingCards = cards.filter((card) => {
+          let correct = 0;
+          let tries = 0;
+          let lastTry = 0;
+          correct += card.statistics.filter(
+            (statistic) => statistic.correct === true
+          ).length;
+
+          tries = card.statistics.length;
+          if (card.statistics[card.statistics.length - 1] === undefined) {
+            return card;
+          } else {
+            lastTry = card.statistics[card.statistics.length - 1].time;
+          }
+
+          const deltaTime = Date.now() - new Date(lastTry).getTime();
+          let deltaDay = deltaTime / (24 * 60 * 60 * 1000);
+          if (deltaDay < 1) deltaDay = 1;
+
+          const index = (correct / tries) * deltaDay;
+
+          // console.log(correct, tries, deltaDay, index);
+          if (index <= 0.5 || Number.isNaN(index)) return card;
+        });
+
+        if (isTraining) cards = trainingCards;
+        if (isShuffle) cards = shuffle(cards);
+
+        return cards;
       },
 
       addCardStatistic: (id: string, time: number, isCorrect: boolean) => {
