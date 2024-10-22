@@ -51,6 +51,8 @@ export interface CategoriesActions {
   deleteCard: (id: string) => void;
   changeCard: (id: string, question: string, answer: string) => void;
   addCardStatistic: (id: string, time: number, isCorrect: boolean) => void;
+  deleteCardStatistics: (id: string) => void;
+  deleteAllCardStatistics: (subcategoryID: string) => void;
   setSyncTime: (value: number | undefined) => void;
   reset: () => void;
 }
@@ -242,7 +244,7 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
                   time: Date.now(),
                   question: question,
                   answer: answer,
-                  statistics: [],
+                  statistics: card.statistics,
                 };
               } else {
                 return card;
@@ -314,12 +316,22 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
           let deltaDay = deltaTime / (24 * 60 * 60 * 1000);
           if (deltaDay < 1) deltaDay = 1;
 
-          const index = (correct / tries) * deltaDay;
+          const index = correct / tries / deltaDay;
 
-          // console.log(correct, tries, deltaDay, index);
+          console.log(
+            "correct: ",
+            correct,
+            "tries:",
+            tries,
+            "deltaDay:",
+            deltaDay,
+            "index:",
+            index,
+            card
+          );
           if (index <= 0.5 || Number.isNaN(index)) return card;
         });
-
+        console.log(trainingCards);
         if (isTraining) cards = trainingCards;
         if (isShuffle) cards = shuffle(cards);
 
@@ -371,6 +383,86 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
         });
 
         set({ categories: newCatogories });
+      },
+
+      deleteCardStatistics: (id: string) => {
+        const { categories } = get();
+        const newCategories = categories.map((category) => {
+          const newSubcategories = category.subcategories.map((subcategory) => {
+            const newCards = subcategory.cards.map((card) => {
+              if (card.id === id) {
+                return {
+                  id: card.id,
+                  time: card.time,
+                  question: card.question,
+                  answer: card.answer,
+                  statistics: [],
+                };
+              } else {
+                return {
+                  id: card.id,
+                  time: card.time,
+                  question: card.question,
+                  answer: card.answer,
+                  statistics: card.statistics,
+                };
+              }
+            });
+
+            return {
+              id: subcategory.id,
+              name: subcategory.name,
+              cards: newCards,
+            };
+          });
+          return {
+            id: category.id,
+            name: category.name,
+            subcategories: newSubcategories,
+          };
+        });
+
+        set({ categories: newCategories });
+      },
+
+      deleteAllCardStatistics: (subcategoryID: string) => {
+        const { categories } = get();
+        const newCategories = categories.map((category) => {
+          const newSubcategories = category.subcategories.map((subcategory) => {
+            const newCards = subcategory.cards.map((card) => {
+              if (subcategory.id === subcategoryID) {
+                return {
+                  id: card.id,
+                  time: card.time,
+                  question: card.question,
+                  answer: card.answer,
+                  statistics: [],
+                };
+              } else {
+                return {
+                  id: card.id,
+                  time: card.time,
+                  question: card.question,
+                  answer: card.answer,
+                  statistics: card.statistics,
+                };
+              }
+            });
+
+            return {
+              id: subcategory.id,
+              name: subcategory.name,
+              cards: newCards,
+            };
+          });
+          return {
+            id: category.id,
+            name: category.name,
+            subcategories: newSubcategories,
+          };
+        });
+
+        set({ categories: newCategories });
       },
 
       setSyncTime: (value: number | undefined) => {

@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   Divider,
@@ -27,12 +28,18 @@ import {
 import { AppContext } from "../App";
 import { ChangeEvent, useContext, useState } from "react";
 import { DashboardNoSubcategory } from "./DashboardNoSubcategory";
-import { ExpandMore } from "@mui/icons-material";
+import { Delete, ExpandMore } from "@mui/icons-material";
 import { v4 } from "uuid";
 
 export const ManageCards = () => {
-  const { getCategoryByID, deleteCard, changeCard, addCard } =
-    useCategoriesStore();
+  const {
+    getCategoryByID,
+    deleteCard,
+    changeCard,
+    addCard,
+    deleteCardStatistics,
+    deleteAllCardStatistics,
+  } = useCategoriesStore();
   const appContext = useContext(AppContext);
 
   const [subcategoryID, setSubcategoryID] = useState("");
@@ -293,6 +300,12 @@ export const ManageCards = () => {
                             {editCardID === card.id ? (
                               <>
                                 <Button
+                                  disabled={
+                                    newCardAnswer !== "" &&
+                                    newCardQuestion !== ""
+                                      ? false
+                                      : true
+                                  }
                                   onClick={() => {
                                     changeCard(
                                       card.id,
@@ -318,13 +331,19 @@ export const ManageCards = () => {
                                     setEditCardID(card.id);
                                   }}
                                 >
-                                  Karte bearbeiten
+                                  Bearbeiten
+                                </Button>
+                                <Button
+                                  color="error"
+                                  onClick={() => deleteCardStatistics(card.id)}
+                                >
+                                  Statistik löschen
                                 </Button>
                                 <Button
                                   color="error"
                                   onClick={() => deleteCard(card.id)}
                                 >
-                                  Karte löschen
+                                  Löschen
                                 </Button>
                               </>
                             )}
@@ -336,6 +355,17 @@ export const ManageCards = () => {
                     )}
                   </Box>
                 </CardContent>
+                <CardActions>
+                  <Typography flexGrow={1} />
+                  <Button
+                    variant="text"
+                    color="error"
+                    disabled={!subcategoryID}
+                    onClick={() => deleteAllCardStatistics(subcategoryID)}
+                  >
+                    Statistik aller Karten löschen
+                  </Button>
+                </CardActions>
               </Card>
             </Box>
           )}

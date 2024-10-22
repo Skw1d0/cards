@@ -105,7 +105,7 @@ export const TrainCards = () => {
               <CardHeader
                 sx={{ color: "primary.main" }}
                 title="Einstellungen"
-                subheader="Welche Einstellungen möchtest du für diesen Test verwenden?"
+                subheader="Welche Einstellungen möchtest du für die Übung verwenden?"
               />
               <CardContent>
                 <Box sx={{ marginBottom: 3 }}>
@@ -125,7 +125,7 @@ export const TrainCards = () => {
                         onClick={() => setTrainingCards(!trainingCards)}
                       />
                     }
-                    label="Bevorzugt Karten abfragen, die ich nicht richtig beantwortet habe."
+                    label="Bevorzugt Karten abfragen, die ich nicht richtig beantwortet habe. (Beta)"
                   />
                 </Box>
               </CardContent>
@@ -178,7 +178,7 @@ export const TrainCards = () => {
             <Card>
               <CardHeader
                 sx={{ color: "primary.main" }}
-                title="Test läuft..."
+                title="Übung läuft..."
                 subheader="Beantworte die Fragen."
               />
               <CardContent>
