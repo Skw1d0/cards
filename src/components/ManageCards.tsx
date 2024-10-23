@@ -203,7 +203,7 @@ export const ManageCards = () => {
                     sx={{
                       padding: 2,
                       overflow: { sm: "auto" },
-                      height: { sm: 500 },
+                      height: { sm: 455 },
                     }}
                   >
                     {getCards().length > 0 ? (
@@ -237,7 +237,16 @@ export const ManageCards = () => {
                               </FormControl>
                             ) : (
                               <>
-                                <Typography>{card.answer}</Typography>
+                                <Typography>
+                                  {card.answer
+                                    .split("\n")
+                                    .map((line, index) => (
+                                      <>
+                                        {line}
+                                        <br />
+                                      </>
+                                    ))}
+                                </Typography>
                                 <Divider variant="fullWidth" sx={{ my: 2 }} />
                                 <Stack direction={"column"}>
                                   <Stack direction={"row"}>

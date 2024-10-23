@@ -191,7 +191,7 @@ export const TrainCards = () => {
               </CardContent>
               <CardActions sx={{ justifyContent: "right", marginRight: 1 }}>
                 <Button color="error" onClick={() => setIsTesting(false)}>
-                  Test Abbrechen
+                  Abbrechen
                 </Button>
               </CardActions>
             </Card>
@@ -205,8 +205,15 @@ export const TrainCards = () => {
                 {isCardCoverd ? (
                   <Skeleton variant="rounded" width={"100%"} height={80} />
                 ) : (
-                  <Typography width={"100%"} height={80}>
-                    {cards[currentCard]?.answer}
+                  <Typography width={"100%"}>
+                    {cards[currentCard]?.answer
+                      .split("\n")
+                      .map((line, index) => (
+                        <>
+                          {line}
+                          <br />
+                        </>
+                      ))}
                   </Typography>
                 )}
               </CardContent>
