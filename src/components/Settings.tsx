@@ -10,12 +10,17 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
 import { useCategoriesStore } from "../stores/storeCategories";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 import { useFirestore } from "../hooks/useFirestore";
@@ -27,6 +32,10 @@ export const Settings = () => {
 
   const { reset, setCategories, syncTime, setSyncTime } = useCategoriesStore();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openLoadDialog, setOpenLoadDialog] = useState(false);
+  const [openSaveDialog, setSaveSaveDialog] = useState(false);
+  const [openDeleteData, setOpenDeleteData] = useState(false);
+
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const { user, googleSignIn, googleSignOut } = useAuth();
 
@@ -40,6 +49,7 @@ export const Settings = () => {
           setSyncTime(data.syncTime);
         }
       }
+      setOpenDeleteData(false);
       setOpenSnackbar(true);
       setSnackbarMessage("Lokale Daten gelöscht.");
     } catch (error) {
@@ -50,6 +60,8 @@ export const Settings = () => {
 
   const handleUpload = async () => {
     const success = await upload();
+    setSaveSaveDialog(false);
+
     if (success) {
       setSnackbarMessage("Erfolgreiche gespeichern.");
       setOpenSnackbar(true);
@@ -62,6 +74,8 @@ export const Settings = () => {
 
   const handleDownload = async () => {
     const data = await download();
+    setOpenLoadDialog(false);
+
     if (data) {
       setCategories(data.categories);
       setSyncTime(data.syncTime);
@@ -84,6 +98,15 @@ export const Settings = () => {
       return;
     }
   };
+
+  useEffect(() => {
+    const syncTime = async () => {
+      const data = await download();
+      setSyncTime(data?.syncTime);
+    };
+
+    syncTime();
+  }, []);
 
   return (
     <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
@@ -135,14 +158,14 @@ export const Settings = () => {
                     <Button
                       variant="contained"
                       startIcon={<CloudUpload />}
-                      onClick={() => handleUpload()}
+                      onClick={() => setSaveSaveDialog(true)}
                     >
                       Speichern
                     </Button>
                     <Button
                       variant="contained"
                       startIcon={<CloudDownload />}
-                      onClick={() => handleDownload()}
+                      onClick={() => setOpenLoadDialog(true)}
                     >
                       Laden
                     </Button>
@@ -174,7 +197,7 @@ export const Settings = () => {
             <Button
               color="error"
               variant="outlined"
-              onClick={() => handleResetLocalStore()}
+              onClick={() => setOpenDeleteData(true)}
               startIcon={<Delete />}
             >
               Lokalen Daten löschen
@@ -189,6 +212,51 @@ export const Settings = () => {
         autoHideDuration={2000}
         message={snackbarMessage}
       />
+
+      <Dialog open={openSaveDialog} onClose={() => setOpenLoadDialog(false)}>
+        <DialogTitle>Daten auf Firebase speichern?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-load-data">
+            Willst du wirklich die lokalen Daten auf Firebase speichern?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleUpload()}>Speichern</Button>
+          <Button autoFocus onClick={() => setSaveSaveDialog(false)}>
+            Abbrechen
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openLoadDialog} onClose={() => setOpenLoadDialog(false)}>
+        <DialogTitle>Daten von Firebase laden?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-load-data">
+            Willst du wirklich die lokalen Daten aus Firebase überschreiben?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleDownload()}>Laden</Button>
+          <Button autoFocus onClick={() => setOpenLoadDialog(false)}>
+            Abbrechen
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDeleteData} onClose={() => setOpenLoadDialog(false)}>
+        <DialogTitle>Daten löschen?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-load-data">
+            Willst du wirklich alle lokalen Daten löschen?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleResetLocalStore()}>Löschen</Button>
+          <Button autoFocus onClick={() => setOpenDeleteData(false)}>
+            Abbrechen
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

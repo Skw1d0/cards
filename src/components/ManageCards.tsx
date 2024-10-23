@@ -26,7 +26,7 @@ import {
   useCategoriesStore,
 } from "../stores/storeCategories";
 import { AppContext } from "../App";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
 import { DashboardNoSubcategory } from "./DashboardNoSubcategory";
 import { Delete, ExpandMore } from "@mui/icons-material";
 import { v4 } from "uuid";
@@ -49,6 +49,21 @@ export const ManageCards = () => {
 
   const [cardQuestion, setCardQuestion] = useState("");
   const [cardAnswer, setCardAnswer] = useState("");
+
+  const textFieldRef = useRef<HTMLInputElement>(null);
+
+  const handleSaveNewCard = () => {
+    addCard(subcategoryID, {
+      id: v4(),
+      time: Date.now(),
+      question: cardQuestion,
+      answer: cardAnswer,
+      statistics: [],
+    });
+    setCardQuestion("");
+    setCardAnswer("");
+    textFieldRef.current?.focus();
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setSubcategoryID(event.target.value as string);
@@ -144,6 +159,7 @@ export const ManageCards = () => {
                             onChange={(event: ChangeEvent<HTMLInputElement>) =>
                               setCardQuestion(event.target.value)
                             }
+                            inputRef={textFieldRef}
                           />
                           <TextField
                             multiline
@@ -166,17 +182,7 @@ export const ManageCards = () => {
                                 cardQuestion === "" ||
                                 subcategoryID === ""
                               }
-                              onClick={() => {
-                                addCard(subcategoryID, {
-                                  id: v4(),
-                                  time: Date.now(),
-                                  question: cardQuestion,
-                                  answer: cardAnswer,
-                                  statistics: [],
-                                });
-                                setCardQuestion("");
-                                setCardAnswer("");
-                              }}
+                              onClick={handleSaveNewCard}
                             >
                               Speichern
                             </Button>
