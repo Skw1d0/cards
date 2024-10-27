@@ -31,24 +31,24 @@ export const Charts = () => {
     return data;
   };
 
-  const getXLabel = () => {
-    return categories
-      .find((Category) => Category.id === appContext?.selectedCategoryID)
-      ?.subcategories.map((subcategory) => subcategory.name);
-  };
+  // const getXLabel = () => {
+  //   return categories
+  //     .find((Category) => Category.id === appContext?.selectedCategoryID)
+  //     ?.subcategories.map((subcategory) => subcategory.name);
+  // };
 
-  const getCardCorrectness = (value: boolean) => {
-    return categories
-      .find((Category) => Category.id === appContext?.selectedCategoryID)
-      ?.subcategories.map((subcategory) => subcategory.cards)
-      .map((card) =>
-        card
-          .map((statistics) => statistics.statistics)
-          .flat()
-          .filter((statistic) => statistic.correct === value)
-      )
-      .map((c) => c.length);
-  };
+  // const getCardCorrectness = (value: boolean) => {
+  //   return categories
+  //     .find((Category) => Category.id === appContext?.selectedCategoryID)
+  //     ?.subcategories.map((subcategory) => subcategory.cards)
+  //     .map((card) =>
+  //       card
+  //         .map((statistics) => statistics.statistics)
+  //         .flat()
+  //         .filter((statistic) => statistic.correct === value)
+  //     )
+  //     .map((c) => c.length);
+  // };
 
   return (
     <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
@@ -90,7 +90,7 @@ export const Charts = () => {
         </Card>
       </Box>
 
-      <Box sx={{ width: { xs: "100%", sm: 500 } }}>
+      {/* <Box sx={{ width: { xs: "100%", sm: 500 } }}>
         <Card>
           <CardHeader
             sx={{ color: "primary.main" }}
@@ -125,7 +125,7 @@ export const Charts = () => {
             </Box>
           </CardContent>
         </Card>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

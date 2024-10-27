@@ -37,6 +37,7 @@ export interface CategoriesActions {
   createCategory: (name: string) => void;
   changeCategoryName: (id: string, name: string) => void;
   deleteCategorey: (id: string) => void;
+  importCategory: (value: string) => boolean;
   createSubcategory: (subcategoryName: string, categoryID: string) => void;
   changeSubcategoryName: (id: string, value: string) => void;
   deleteSubcategory: (id: string) => void;
@@ -54,6 +55,7 @@ export interface CategoriesActions {
   deleteCardStatistics: (id: string) => void;
   deleteAllCardStatistics: (subcategoryID: string) => void;
   setSyncTime: (value: number | undefined) => void;
+  exportCategory: (id: string) => string;
   reset: () => void;
 }
 
@@ -90,6 +92,39 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
         ];
 
         set({ categories: newCategories });
+      },
+
+      importCategory: (value: string): boolean => {
+        const { categories } = get();
+
+        try {
+          let importedCategory: Category = JSON.parse(value);
+
+          if (
+            !importedCategory.id ||
+            !importedCategory.name ||
+            !importedCategory.subcategories
+          ) {
+            return false;
+          }
+
+          importedCategory.id = v4();
+          const newCategories = [...categories, importedCategory];
+          set({ categories: newCategories });
+
+          return true;
+        } catch (error) {
+          console.log(error);
+          return false;
+        }
+      },
+
+      exportCategory: (id: string): string => {
+        const { categories } = get();
+
+        return JSON.stringify(
+          categories.filter((category) => category.id === id)[0]
+        );
       },
 
       changeCategoryName: (id: string, name: string) => {
