@@ -35,6 +35,7 @@ import {
   Share,
 } from "@mui/icons-material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { styled } from "@mui/material/styles";
 
 export const Categories = () => {
   const {
@@ -44,15 +45,14 @@ export const Categories = () => {
     changeCategoryName,
     exportCategory,
     importCategory,
+    getCategoryByID,
   } = useCategoriesStore();
   const appContext = useContext(AppContext);
-
   const [categoryInputValue, setCategoryInputValue] = useState("");
   const [editCategoryID, setEditCategoryID] = useState("");
   const [editCategoryValue, setEditCategoryValue] = useState("");
   const [categoryIDToDelete, setCategoryIDToDelete] = useState("");
   const [categoryIDToExport, setCategoryIDToExport] = useState("");
-  const [importValue, setImportValue] = useState("");
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [showSnackbar, setShowSnackbar] = useState(false);
@@ -97,16 +97,48 @@ export const Categories = () => {
     setEditCategoryID("");
   };
 
-  const handleImportCategory = () => {
-    if (importCategory(importValue)) {
-      setShowSnackbar(true);
-      setSnackbarMessage("Kategorie erfolgreich importiert.");
-      setImportValue("");
-    } else {
-      setShowSnackbar(true);
-      setSnackbarMessage("Beim Importieren ist ein Fehler aufgetreten.");
-    }
+  const handleExportCategory = (id: string) => {
+    if (!id) return;
+
+    const category = getCategoryByID(id);
+    const fileData = JSON.stringify(category);
+    const blob = new Blob([fileData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = `${category?.name.trim()}.json`;
+    link.href = url;
+    link.click();
   };
+
+  const handleImportCategory = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const content = reader.result as string;
+      if (importCategory(content)) {
+        setShowSnackbar(true);
+        setSnackbarMessage("Kategorie erfolgreich importiert.");
+      } else {
+        setShowSnackbar(true);
+        setSnackbarMessage("Beim Importieren ist ein Fehler aufgetreten.");
+      }
+    };
+    reader.readAsText(file); // Lese die Datei als Text
+  };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
   return (
     <>
@@ -165,31 +197,25 @@ export const Categories = () => {
               <CardHeader
                 sx={{ color: "primary.main" }}
                 title="Kategorie importieren"
-                subheader="Importiere eine Kategorie."
+                subheader="Importiere eine Kategorie mittels JSON-Datei."
               />
             </AccordionSummary>
             <AccordionDetails>
               <List>
                 <ListItem>
-                  <TextField
-                    fullWidth
-                    id="import-category"
-                    label="Kategorieobjekt"
-                    multiline
-                    rows={4}
-                    value={importValue}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                      setImportValue(event.target.value)
-                    }
-                  />
-                </ListItem>
-                <ListItem>
                   <Button
+                    component="label"
+                    role={undefined}
                     variant="contained"
-                    onClick={handleImportCategory}
-                    disabled={importValue === ""}
+                    tabIndex={-1}
                   >
                     Importieren
+                    <VisuallyHiddenInput
+                      type="file"
+                      accept="application/json"
+                      onChange={handleImportCategory}
+                      multiple
+                    />
                   </Button>
                 </ListItem>
               </List>
@@ -257,7 +283,8 @@ export const Categories = () => {
                             <Edit />
                           </IconButton>
                           <IconButton
-                            onClick={() => toggleOpenExportDialog(category.id)}
+                            // onClick={() => toggleOpenExportDialog(category.id)}
+                            onClick={() => handleExportCategory(category.id)}
                           >
                             <Share />
                           </IconButton>
