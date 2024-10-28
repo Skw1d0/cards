@@ -21,6 +21,7 @@ import {
   Folder,
   KeyboardArrowDown,
   PsychologyAlt,
+  Visibility,
 } from "@mui/icons-material";
 
 export const DashboradNavigation = () => {
@@ -75,9 +76,21 @@ export const DashboradNavigation = () => {
           </ListItemButton>
 
           <ListItemButton
+            onClick={() => {
+              dashboardContext?.setDeschboardType("view-cards");
+              handleClose();
+            }}
+          >
+            <ListItemIcon>
+              <Visibility />
+            </ListItemIcon>
+            <ListItemText>Karteikarten ansehen</ListItemText>
+          </ListItemButton>
+
+          <ListItemButton
             divider
             onClick={() => {
-              dashboardContext?.setDeschboardType("query");
+              dashboardContext?.setDeschboardType("train-cards");
               handleClose();
             }}
           >

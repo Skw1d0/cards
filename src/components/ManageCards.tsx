@@ -242,7 +242,7 @@ export const ManageCards = () => {
                                 />
                               </FormControl>
                             ) : (
-                              <>
+                              <Box>
                                 <Typography>
                                   {card.answer
                                     .split("\n")
@@ -308,7 +308,7 @@ export const ManageCards = () => {
                                     </Typography>
                                   </Stack>
                                 </Stack>
-                              </>
+                              </Box>
                             )}
                           </AccordionDetails>
                           <AccordionActions>

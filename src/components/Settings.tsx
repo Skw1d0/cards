@@ -106,7 +106,7 @@ export const Settings = () => {
     };
 
     syncTime();
-  }, []);
+  }, [setSyncTime, download]);
 
   return (
     <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
