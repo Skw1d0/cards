@@ -36,7 +36,7 @@ function App() {
               isDarkMode,
             }}
           >
-            <BrowserRouter>
+            <BrowserRouter basename="/cards">
               <NavigartionBar />
               <Box marginTop={10}>
                 <Routes>

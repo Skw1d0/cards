@@ -21,7 +21,7 @@ import { useEffect } from "react";
 import { useCategoriesStore } from "../stores/storeCategories";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSubcategoryStatistics } from "../tools/getSubcategoryStatistics";
-import { BarChart, LineChart } from "@mui/x-charts";
+import { LineChart } from "@mui/x-charts";
 
 export const Subcategories = () => {
   const navigate = useNavigate();
