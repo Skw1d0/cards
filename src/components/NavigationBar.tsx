@@ -22,10 +22,14 @@ import {
 } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
+import { useSettingsStore } from "../stores/storeSettings";
+import { useNavigate } from "react-router-dom";
 
 export const NavigartionBar = () => {
   const appContext = useContext(AppContext);
   const [open, setOpen] = useState(false);
+  const { toggleDarkMode } = useSettingsStore();
+  const navigate = useNavigate();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -33,7 +37,7 @@ export const NavigartionBar = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="fixed">
+        <AppBar>
           <Toolbar>
             <Stack
               sx={{ alignItems: "center", width: "100%" }}
@@ -46,11 +50,7 @@ export const NavigartionBar = () => {
               <Typography sx={{ marginRight: 1, flexGrow: 1 }}>
                 Cards
               </Typography>
-              <IconButton
-                onClick={() => {
-                  appContext?.setIsDarkMode(!appContext.isDarkMode);
-                }}
-              >
+              <IconButton onClick={() => toggleDarkMode()}>
                 {appContext?.isDarkMode ? (
                   <LightMode />
                 ) : (
@@ -74,13 +74,15 @@ export const NavigartionBar = () => {
                 <Close />
               </IconButton>
             </ListItem>
-            <ListItemButton onClick={() => appContext?.setPage("cards")}>
+            {/* <ListItemButton onClick={() => appContext?.setPage("cards")}> */}
+            <ListItemButton onClick={() => navigate("/")}>
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
               <ListItemText>Home</ListItemText>
             </ListItemButton>
-            <ListItemButton onClick={() => appContext?.setPage("settings")}>
+            {/* <ListItemButton onClick={() => appContext?.setPage("settings")}> */}
+            <ListItemButton onClick={() => navigate("/settings")}>
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>

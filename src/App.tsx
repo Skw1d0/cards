@@ -1,43 +1,30 @@
-import "./App.css";
+import "./App.scss";
+import { createContext } from "react";
+import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "@emotion/react";
-import { Box, CssBaseline, useMediaQuery } from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Box, CssBaseline } from "@mui/material";
 import { NavigartionBar } from "./components/NavigationBar";
 import { light, dark } from "./themes/themes";
-import { createContext, useEffect, useState } from "react";
-import { Dashboard } from "./components/Dashboard";
+import { useSettingsStore } from "./stores/storeSettings";
 import { Categories } from "./components/Categories";
+import { PageNotFound } from "./components/PageNotFound";
 import { Settings } from "./components/Settings";
-import { AuthProvider } from "./context/AuthContext";
-
-type ThemeTypes = "auto" | "light" | "dark";
-type PageTypes = "cards" | "settings";
+import { ManageCategory } from "./components/ManageCategory";
+import { Subcategories } from "./components/Subcategories";
+import { ManageSubcategory } from "./components/ManageSubcategory";
+import { Cards } from "./components/Cards";
+import { ManageCard } from "./components/ManageCard";
+import { Training } from "./components/Training";
 
 interface AppContextProps {
   isDarkMode: boolean;
-  selectedCategoryID: string | undefined;
-  page: PageTypes;
-  setPage: (value: PageTypes) => void;
-  setIsDarkMode: (value: boolean) => void;
-  setSelectedCategoryID: (id: string | undefined) => void;
 }
 
 export const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 function App() {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [theme] = useState<ThemeTypes>("auto");
-  const [page, setPage] = useState<PageTypes>("cards");
-
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [selectedCategoryID, setSelectedCategoryID] = useState<
-    string | undefined
-  >(undefined);
-
-  useEffect(() => {
-    setIsDarkMode(
-      theme === "auto" ? prefersDarkMode : theme === "dark" ? true : false
-    );
-  }, [theme, prefersDarkMode]);
+  const { isDarkMode } = useSettingsStore();
 
   return (
     <div className="App">
@@ -46,26 +33,52 @@ function App() {
           <CssBaseline />
           <AppContext.Provider
             value={{
-              selectedCategoryID,
-              setSelectedCategoryID,
-              page,
-              setPage,
               isDarkMode,
-              setIsDarkMode,
             }}
           >
-            <NavigartionBar />
-            {page === "cards" && (
+            <BrowserRouter>
+              <NavigartionBar />
               <Box marginTop={10}>
-                {selectedCategoryID === undefined && <Categories />}
-                {selectedCategoryID !== undefined && <Dashboard />}
+                <Routes>
+                  <Route path="/" element={<Categories />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/manage-category" element={<ManageCategory />} />
+                  <Route
+                    path="/manage-category/:categoryID"
+                    element={<ManageCategory />}
+                  />
+                  <Route
+                    path="/subcategories/:categoryID"
+                    element={<Subcategories />}
+                  />
+                  <Route
+                    path="/manage-subcategory/:categoryID"
+                    element={<ManageSubcategory />}
+                  />
+                  <Route
+                    path="/manage-subcategory/:categoryID/:subcategoryID"
+                    element={<ManageSubcategory />}
+                  />
+                  <Route
+                    path="/cards/:categoryID/:subcategoryID"
+                    element={<Cards />}
+                  />
+                  <Route
+                    path="/manage-card/:categoryID/:subcategoryID"
+                    element={<ManageCard />}
+                  />
+                  <Route
+                    path="/manage-card/:categoryID/:subcategoryID/edit/:cardID"
+                    element={<ManageCard />}
+                  />
+                  <Route
+                    path="/training/:categoryID/:subcategoryID"
+                    element={<Training />}
+                  />
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
               </Box>
-            )}
-            {page === "settings" && (
-              <Box marginTop={10}>
-                <Settings />
-              </Box>
-            )}
+            </BrowserRouter>
           </AppContext.Provider>
         </ThemeProvider>
       </AuthProvider>

@@ -41,7 +41,9 @@ export interface CategoriesActions {
   createSubcategory: (subcategoryName: string, categoryID: string) => void;
   changeSubcategoryName: (id: string, value: string) => void;
   deleteSubcategory: (id: string) => void;
-  getCategoryByID: (id: string) => Category | undefined;
+  getCategoryByID: (id: string | undefined) => Category | undefined;
+  getSubcategoryByID: (id: string | undefined) => Subcategory | undefined;
+  getCardByID: (id: string | undefined) => Card | undefined;
   addCard: (subcategoryID: string, card: Card) => void;
   getCards: (
     categoryID: string,
@@ -214,10 +216,47 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
         set({ categories: newCategories });
       },
 
-      getCategoryByID: (id: string): Category | undefined => {
+      getCategoryByID: (id: string | undefined): Category | undefined => {
+        if (!id) return undefined;
+
         const { categories } = get();
         const result = categories.find((cat) => cat.id === id);
         return result;
+      },
+
+      getSubcategoryByID: (id: string | undefined): Subcategory | undefined => {
+        if (!id) return undefined;
+
+        const { categories } = get();
+        let result: Subcategory | undefined = undefined;
+        categories.forEach((category) =>
+          category.subcategories.forEach((subcategory) => {
+            if (subcategory.id === id) {
+              result = subcategory;
+            }
+          })
+        );
+        return result;
+      },
+
+      getCardByID: (id: string | undefined): Card | undefined => {
+        const { categories } = get();
+
+        if (!id) return undefined;
+
+        let cardToReturn: Card | undefined = undefined;
+
+        categories.forEach((category) =>
+          category.subcategories.forEach((subcategory) =>
+            subcategory.cards.forEach((card) => {
+              if (card.id === id) {
+                cardToReturn = card;
+              }
+            })
+          )
+        );
+
+        return cardToReturn;
       },
 
       addCard: (id: string, card: Card) => {
@@ -353,20 +392,10 @@ export const useCategoriesStore = create<CategoriesState & CategoriesActions>()(
 
           const index = correct / tries / deltaDay;
 
-          console.log(
-            "correct: ",
-            correct,
-            "tries:",
-            tries,
-            "deltaDay:",
-            deltaDay,
-            "index:",
-            index,
-            card
-          );
           if (index <= 0.5 || Number.isNaN(index)) return card;
+          return [];
         });
-        console.log(trainingCards);
+
         if (isTraining) cards = trainingCards;
         if (isShuffle) cards = shuffle(cards);
 

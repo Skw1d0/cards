@@ -20,15 +20,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useCategoriesStore } from "../stores/storeCategories";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 import { useFirestore } from "../hooks/useFirestore";
-import { AppContext } from "../App";
 
 export const Settings = () => {
   const { upload, download } = useFirestore();
-  const appContext = useContext(AppContext);
 
   const { reset, setCategories, syncTime, setSyncTime } = useCategoriesStore();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -41,7 +39,6 @@ export const Settings = () => {
 
   const handleResetLocalStore = async () => {
     try {
-      appContext?.setSelectedCategoryID(undefined);
       reset();
       if (user) {
         const data = await download();
@@ -79,7 +76,6 @@ export const Settings = () => {
     if (data) {
       setCategories(data.categories);
       setSyncTime(data.syncTime);
-      appContext?.setSelectedCategoryID(undefined);
       setSnackbarMessage("Erfolgreiche geladen.");
       setOpenSnackbar(true);
     } else {
@@ -106,105 +102,102 @@ export const Settings = () => {
     };
 
     syncTime();
-  }, [setSyncTime, download]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
-    <Box sx={{ margin: 2, display: "flex", flexWrap: "wrap", gap: 3 }}>
-      <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-        <Card>
-          <CardHeader
-            sx={{ color: "primary.main" }}
-            title="Firebase"
-            subheader=" Mit der Firebase Datenbank hast du die Möglichkeit, deine lokalen
+    <div className="content-container">
+      <Card className="card">
+        <CardHeader
+          sx={{ color: "primary.main" }}
+          title="Firebase"
+          subheader=" Mit der Firebase Datenbank hast du die Möglichkeit, deine lokalen
               Daten online zu speichern und diese auf einem anderen Gerät wieder
               abzurufen (syncronisieren)."
-          />
-          <CardContent>
-            <Box>
-              {user?.uid === undefined ? (
-                <Button
-                  startIcon={<Google />}
+        />
+        <CardContent>
+          <Box>
+            {user?.uid === undefined ? (
+              <Button
+                startIcon={<Google />}
+                color="primary"
+                variant="contained"
+                onClick={() => handleGoogleSignIn()}
+              >
+                Anmelden mit Google
+              </Button>
+            ) : (
+              <Box>
+                <Typography
+                  textTransform={"uppercase"}
                   color="primary"
-                  variant="contained"
-                  onClick={() => handleGoogleSignIn()}
+                  fontSize={"0.8em"}
                 >
-                  Anmelden mit Google
-                </Button>
-              ) : (
-                <Box>
+                  Angemeldeter Benutzer:
+                </Typography>
+                <Typography marginBottom={2}>{user.email}</Typography>
+                <Stack direction={"column"} marginBottom={2}>
                   <Typography
                     textTransform={"uppercase"}
                     color="primary"
                     fontSize={"0.8em"}
                   >
-                    Angemeldeter Benutzer:
+                    Letzter Speicherstand:
                   </Typography>
-                  <Typography marginBottom={2}>{user.email}</Typography>
-                  <Stack direction={"column"} marginBottom={2}>
-                    <Typography
-                      textTransform={"uppercase"}
-                      color="primary"
-                      fontSize={"0.8em"}
-                    >
-                      Letzter Speicherstand:
-                    </Typography>
-                    <Typography>
-                      {syncTime === undefined
-                        ? "kein"
-                        : new Date(syncTime).toLocaleString() + " Uhr"}
-                    </Typography>
-                  </Stack>
-                  <Box display={"flex"} flexWrap={"wrap"} gap={2}>
-                    <Button
-                      variant="contained"
-                      startIcon={<CloudUpload />}
-                      onClick={() => setSaveSaveDialog(true)}
-                    >
-                      Speichern
-                    </Button>
-                    <Button
-                      variant="contained"
-                      startIcon={<CloudDownload />}
-                      onClick={() => setOpenLoadDialog(true)}
-                    >
-                      Laden
-                    </Button>
-                    <Button
-                      onClick={googleSignOut}
-                      variant="outlined"
-                      color="error"
-                      startIcon={<Google />}
-                    >
-                      Abmelden
-                    </Button>
-                  </Box>
+                  <Typography>
+                    {syncTime === undefined
+                      ? "kein"
+                      : new Date(syncTime).toLocaleString() + " Uhr"}
+                  </Typography>
+                </Stack>
+                <Box display={"flex"} flexWrap={"wrap"} gap={2}>
+                  <Button
+                    variant="contained"
+                    startIcon={<CloudUpload />}
+                    onClick={() => setSaveSaveDialog(true)}
+                  >
+                    Speichern
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<CloudDownload />}
+                    onClick={() => setOpenLoadDialog(true)}
+                  >
+                    Laden
+                  </Button>
+                  <Button
+                    onClick={googleSignOut}
+                    variant="outlined"
+                    color="error"
+                    startIcon={<Google />}
+                  >
+                    Abmelden
+                  </Button>
                 </Box>
-              )}
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
+              </Box>
+            )}
+          </Box>
+        </CardContent>
+      </Card>
 
-      <Box sx={{ width: { xs: "100%", sm: 500 } }}>
-        <Card>
-          <CardHeader
-            sx={{ color: "primary.main" }}
-            title="Lokale Daten löschen"
-            subheader="Das Löschen der lokalen Daten wird
+      <Card className="card">
+        <CardHeader
+          sx={{ color: "primary.main" }}
+          title="Lokale Daten löschen"
+          subheader="Das Löschen der lokalen Daten wird
               sofort und unwiederbringlich durchgeführt!"
-          />
-          <CardContent>
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={() => setOpenDeleteData(true)}
-              startIcon={<Delete />}
-            >
-              Lokalen Daten löschen
-            </Button>
-          </CardContent>
-        </Card>
-      </Box>
+        />
+        <CardContent>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={() => setOpenDeleteData(true)}
+            startIcon={<Delete />}
+          >
+            Lokalen Daten löschen
+          </Button>
+        </CardContent>
+      </Card>
 
       <Snackbar
         open={openSnackbar}
@@ -257,6 +250,6 @@ export const Settings = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </div>
   );
 };
