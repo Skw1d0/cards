@@ -182,6 +182,7 @@ export const ManageCard = () => {
                       },
                     ]}
                     xAxis={[{ data: chartData?.labels, scaleType: "band" }]}
+                    sx={{ "&&": { touchAction: "auto" } }}
                   />
                 </Box>
               </CardContent>

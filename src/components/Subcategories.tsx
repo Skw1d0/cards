@@ -11,6 +11,7 @@ import {
   Button,
   Card,
   CardActions,
+  CardContent,
   CardHeader,
   IconButton,
   Typography,
@@ -19,11 +20,13 @@ import { useEffect } from "react";
 
 import { useCategoriesStore } from "../stores/storeCategories";
 import { useNavigate, useParams } from "react-router-dom";
+import { getSubcategoryStatistics } from "../tools/getSubcategoryStatistics";
+import { BarChart, LineChart } from "@mui/x-charts";
 
 export const Subcategories = () => {
   const navigate = useNavigate();
 
-  const { getCategoryByID, deleteSubcategory } = useCategoriesStore();
+  const { getCategoryByID, deleteSubcategory, getCards } = useCategoriesStore();
   const { categoryID } = useParams();
 
   useEffect(() => {
@@ -50,6 +53,39 @@ export const Subcategories = () => {
               title={subcategory.name}
               subheader={subcategory.cards.length + " Karteikarten"}
             />
+            <CardContent>
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={{ xs: "flex-start", md: "center" }}
+                sx={{
+                  marginTop: { xs: -12, sm: -10, md: -8 },
+                  marginBottom: { xs: -8, sm: -6, md: -2 },
+                  mx: { xs: -3, sm: -4 },
+                }}
+              >
+                <LineChart
+                  xAxis={[
+                    {
+                      scaleType: "band",
+                      data: getSubcategoryStatistics(
+                        getCards(categoryID, false, false, subcategory.id)
+                      ).labels,
+                    },
+                  ]}
+                  series={[
+                    {
+                      data: getSubcategoryStatistics(
+                        getCards(categoryID, false, false, subcategory.id)
+                      ).amount,
+                    },
+                  ]}
+                  width={800}
+                  height={300}
+                  sx={{ "&&": { touchAction: "auto" } }}
+                />
+              </Box>
+            </CardContent>
             <CardActions>
               <Button
                 startIcon={<PsychologyAlt />}
